@@ -151,7 +151,7 @@ namespace overworld {
      * Loads the overworld tilemap connected to the loaded map by the
      * given id.
      */
-    //% block="load connected map $connectionID"
+    //% block="load map connected by ID $connectionID"
     //% group="Connections" weight=30 blockGap=8
     export function loadConnectedMap(connectionID: number) {
         loadMap(getConnectedMap(getLoadedMap(), connectionID));
