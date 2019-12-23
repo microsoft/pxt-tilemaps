@@ -3,7 +3,7 @@ namespace SpriteKind {
 } 
 
 //% color=#84b89f
-namespace overworld {
+namespace tilemap {
     /**
      * Returns the number of columns in the currently loaded tilemap.
      */
@@ -78,6 +78,7 @@ namespace overworld {
     export function coverTile(col: number, row: number, cover: Image) {
         const coverSprite = sprites.create(cover, SpriteKind.Decoration);
         coverSprite.setFlag(SpriteFlag.Ghost, true);
+        coverSprite.z = -1;
         tiles.placeOnTile(coverSprite, tiles.getTileLocation(col, row));
     }
 
@@ -147,5 +148,69 @@ namespace overworld {
     export function centerCameraOnTile(col: number, row: number) {
         const loc = tiles.getTileLocation(col, row);
         scene.centerCameraAt(loc.x, loc.y);
+    }
+
+    /**
+     * Converts a screen coordinate to a tilemap coordinate.
+     */
+    //% block="screen $value to tile coordinate"
+    export function screenCoordinateToTile(value: number) {
+        const tm = game.currentScene().tileMap;
+        if (!tm) return value >> 4;
+        return value >> tm.scale;
+    }
+
+    /**
+     * Converts a tilemap coordinate to a screen coordinate.
+     */
+    //% block="tile $value to screen coordinate"
+    export function tileCoordinateToScreen(value: number) {
+        const tm = game.currentScene().tileMap;
+        if (!tm) return value << 4;
+        return value << tm.scale;
+    }
+
+    /**
+     * Converts a tilemap coordinate to a screen coordinate and
+     * adds half a tile width.
+     */
+    //% block="centered tile $value to screen coordinate"
+    export function centeredTileCoordinateToScreen(value: number) {
+        const tm = game.currentScene().tileMap;
+        if (!tm) return (value << 4) + 8;
+        return (value << tm.scale) + (1 << (tm.scale - 1));
+    }
+
+    /**
+     * Gets the neighboring column in the given direction.
+     */
+    //% block="column $column in direction $direction"
+    export function columnInDirection(column: number, direction: WorldDirection) {
+        if (direction === WorldDirection.East) return column + 1;
+        else if (direction === WorldDirection.West) return column - 1;
+        else return column;
+    }
+
+    /**
+     * Gets the neighboring row in the given direction.
+     */
+    //% block="row $row in direction $direction"
+    export function rowInDirection(row: number, direction: WorldDirection) {
+        if (direction === WorldDirection.North) return row - 1;
+        else if (direction === WorldDirection.South) return row + 1;
+        else return row;
+    }
+
+    /**
+     * Executes a piece of code for each cardinal direction starting at North
+     * and going clockwise.
+     */
+    //% block="for each direction $direction"
+    //% draggableParameters="reporter"
+    export function forEachDirection(cb: (direction: WorldDirection) => void) {
+        cb(WorldDirection.North);
+        cb(WorldDirection.East);
+        cb(WorldDirection.South);
+        cb(WorldDirection.West);
     }
 }
