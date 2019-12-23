@@ -5,11 +5,11 @@
     },
     "description": "",
     "files": [
-        "main.blocks",
         "main.ts",
-        "README.md"
+        "README.md",
+        "tilemap.ts"
     ],
-    "preferredEditor": "blocksprj",
+    "preferredEditor": "tsprj",
     "testFiles": [
         "test.ts"
     ]
