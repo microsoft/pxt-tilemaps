@@ -126,6 +126,17 @@ namespace tilemap {
     }
 
     /**
+     * Destroy all sprites of a given kind. Useful when switching
+     * between tilemaps.
+     */
+    //% block="destroy all sprites of kind $spriteKind"
+    //% spriteKind.shadow=spritekind
+    //% group="Operations" weight=9 blockGap=8
+    export function destorySpritesOfKind(spriteKind: number) {
+        sprites.allOfKind(spriteKind).forEach(s => s.destroy());
+    }
+
+    /**
      * Returns the width of tiles in the loaded tilemap.
      */
     //% block="tile width"
