@@ -2,7 +2,8 @@ namespace SpriteKind {
     export const Decoration = SpriteKind.create()
 } 
 
-//% color=#84b89f groups='["Operations","Values","Conversions","Directions"]'
+//% color=#84b89f icon="\uf279"
+//% groups='["Operations","Values","Conversions","Directions"]'
 namespace tilemap {
     /**
      * Determines if the tile in the loaded tilemap at the given location

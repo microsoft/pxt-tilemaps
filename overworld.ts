@@ -9,7 +9,7 @@ enum WorldDirection {
     West
 }
 
-//% color=#b8849b
+//% color=#b8849b icon="\uf0ac"
 //% groups='["Creation", "Connections", "World Grid"]'
 namespace overworld {
     export const OVERWORLD_MAP_ID = 7686; 
