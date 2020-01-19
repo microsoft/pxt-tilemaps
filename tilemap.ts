@@ -99,7 +99,7 @@ namespace tilemap {
     //% group="Operations" weight=30 blockGap=8
     export function createSpritesOnTiles(tileKind: Image, spriteKind: number) {
         forEachTileOfKind(tileKind, loc => {
-            tiles.placeOnTile(sprites.create(img`.`), loc);
+            tiles.placeOnTile(sprites.create(img`.`, spriteKind), loc);
         });
     }
 
