@@ -6,6 +6,17 @@ namespace SpriteKind {
 //% groups='["Operations","Values","Conversions","Directions"]'
 namespace tilemap {
     /**
+     * Gets the tile location of a sprite.
+     */
+    //% block="location of $s"
+    //% s.shadow=variables_get
+    //% s.defl=sprite
+    //% group="Operations" weight=90
+    export function locationOfSprite(s: Sprite): tiles.Location {
+        return tiles.getTileLocation(screenCoordinateToTile(s.x), screenCoordinateToTile(s.y));
+    }
+
+    /**
      * Determines if the tile in the loaded tilemap at the given location
      * is of a particular kind.
      */
