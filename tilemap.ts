@@ -27,7 +27,7 @@ namespace tilemap {
      * tilemap.
      */
     //% block="for each $tileKind tile at $location"
-    //% draggableParameters="reporter"
+    //% draggableParameters="reporter" handlerStatement
     //% tileKind.shadow=tileset_tile_picker
     //% tileKind.decompileIndirectFixedInstances=true
     //% group="Operations" weight=70 blockGap=8
@@ -46,7 +46,7 @@ namespace tilemap {
      * Executes a piece of code for every tile in the loaded tilemap
      */
     //% block="for each tile at $location with image $tile"
-    //% draggableParameters="reporter"
+    //% draggableParameters="reporter" handlerStatement
     //% group="Operations" weight=60
     export function forEachTileOfMap(cb: (location: tiles.Location, tile: Image) => void) {
         const height = tilemapRows();
@@ -260,7 +260,7 @@ namespace tilemap {
      * and going clockwise.
      */
     //% block="for each direction $direction"
-    //% draggableParameters="reporter"
+    //% draggableParameters="reporter" handlerStatement
     //% group="Directions" weight=20
     export function forEachDirection(cb: (direction: WorldDirection) => void) {
         cb(WorldDirection.North);
