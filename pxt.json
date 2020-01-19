@@ -14,5 +14,6 @@
     "preferredEditor": "tsprj",
     "testFiles": [
         "test.ts"
-    ]
+    ],
+    "version": "1.0.0"
 }
