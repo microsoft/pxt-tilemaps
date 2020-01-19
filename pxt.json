@@ -8,7 +8,8 @@
         "main.ts",
         "README.md",
         "tilemap.ts",
-        "overworld.ts"
+        "overworld.ts",
+        "search.ts"
     ],
     "preferredEditor": "tsprj",
     "testFiles": [

@@ -9,11 +9,16 @@ namespace tilemap {
      * Determines if the tile in the loaded tilemap at the given location
      * is of a particular kind.
      */
-    //% block="tile at col $col row $row is $tile"
+    //% block="tile at $location is $tile"
+    //% location.shadow=mapgettile
     //% tile.shadow=tileset_tile_picker
     //% tile.decompileIndirectFixedInstances=true
     //% group="Operations" weight=80
-    export function tileIs(col: number, row: number, tile: Image): boolean {
+    export function tileIs(location: tiles.Location, tile: Image): boolean {
+        return tileIsCore(locationColumn(location), locationRow(location), tile);
+    }
+
+    function tileIsCore(col: number, row: number, tile: Image): boolean {
         return tile.equals(tiles.getTileAt(col, row));
     }
 
@@ -21,18 +26,18 @@ namespace tilemap {
      * Executes a piece of code for every tile of a given kind in the loaded
      * tilemap.
      */
-    //% block="for each $tileKind tile at $col $row"
+    //% block="for each $tileKind tile at $location"
     //% draggableParameters="reporter"
     //% tileKind.shadow=tileset_tile_picker
     //% tileKind.decompileIndirectFixedInstances=true
     //% group="Operations" weight=70 blockGap=8
-    export function forEachTileOfKind(tileKind: Image, cb: (col: number, row: number) => void) {
+    export function forEachTileOfKind(tileKind: Image, cb: (location: tiles.Location) => void) {
         const height = tilemapRows();
         const width = tilemapColumns();
 
         for (let c = 0; c < width; c++) {
             for (let r = 0; r < height; r++) {
-                if (tileIs(c, r, tileKind)) cb(c, r);
+                if (tileIsCore(c, r, tileKind)) cb(tiles.getTileLocation(c, r));
             }
         }
     }
@@ -40,16 +45,16 @@ namespace tilemap {
     /**
      * Executes a piece of code for every tile in the loaded tilemap
      */
-    //% block="for each tile at $col $row with image $tile"
+    //% block="for each tile at $location with image $tile"
     //% draggableParameters="reporter"
     //% group="Operations" weight=60
-    export function forEachTileOfMap(cb: (col: number, row: number, tile: Image) => void) {
+    export function forEachTileOfMap(cb: (location: tiles.Location, tile: Image) => void) {
         const height = tilemapRows();
         const width = tilemapColumns();
 
         for (let c = 0; c < width; c++) {
             for (let r = 0; r < height; r++) {
-                cb(c, r, tiles.getTileAt(c, r));
+                cb(tiles.getTileLocation(c, r), tiles.getTileAt(c, r));
             }
         }
     }
@@ -58,15 +63,16 @@ namespace tilemap {
      * Cover the tile in the loaded tilemap at a given location with
      * another tile. Tiles are covered with sprites of kind Decoration.
      */
-    //% block="cover tile at col $col row $row with $cover"
+    //% block="cover tile at $location with $cover"
     //% cover.shadow=tileset_tile_picker
     //% cover.decompileIndirectFixedInstances=true
     //% group="Operations" weight=50 blockGap=8
-    export function coverTile(col: number, row: number, cover: Image) {
+    //% location.shadow=mapgettile
+    export function coverTile(location: tiles.Location, cover: Image) {
         const coverSprite = sprites.create(cover, SpriteKind.Decoration);
         coverSprite.setFlag(SpriteFlag.Ghost, true);
         coverSprite.z = -1;
-        tiles.placeOnTile(coverSprite, tiles.getTileLocation(col, row));
+        tiles.placeOnTile(coverSprite, location);
     }
 
     /**
@@ -80,9 +86,7 @@ namespace tilemap {
     //% cover.decompileIndirectFixedInstances=true
     //% group="Operations" weight=40 blockGap=8
     export function coverAllTiles(tileKind: Image, cover: Image) {
-        forEachTileOfKind(tileKind, function (col: number, row: number) {
-            coverTile(col, row, cover);
-        });
+        forEachTileOfKind(tileKind, loc => coverTile(loc, cover));
     }
     
     /**
@@ -94,8 +98,8 @@ namespace tilemap {
     //% spriteKind.shadow=spritekind
     //% group="Operations" weight=30 blockGap=8
     export function createSpritesOnTiles(tileKind: Image, spriteKind: number) {
-        forEachTileOfKind(tileKind, (col, row) => {
-            tiles.placeOnTile(sprites.create(img`.`), tiles.getTileLocation(col, row));
+        forEachTileOfKind(tileKind, loc => {
+            tiles.placeOnTile(sprites.create(img`.`), loc);
         });
     }
 
@@ -110,19 +114,19 @@ namespace tilemap {
     //% to.decompileIndirectFixedInstances=true
     //% group="Operations" weight=20
     export function replaceAllTiles(from: Image, to: Image) {
-        forEachTileOfKind(from, function (col: number, row: number) {
-            tiles.setTileAt(tiles.getTileLocation(col, row), to);
-        });
+        forEachTileOfKind(from, loc => 
+            tiles.setTileAt(loc, to)
+        );
     }
 
     /**
      * Center the camera on a given tile location.
      */
-    //% block="center camera on col $col row $row"
+    //% block="center camera on $location"
     //% group="Operations" weight=10 blockGap=8
-    export function centerCameraOnTile(col: number, row: number) {
-        const loc = tiles.getTileLocation(col, row);
-        scene.centerCameraAt(loc.x, loc.y);
+    //% location.shadow=mapgettile
+    export function centerCameraOnTile(location: tiles.Location) {
+        scene.centerCameraAt(location.x, location.y);
     }
 
     /**
@@ -171,6 +175,26 @@ namespace tilemap {
 
         if (!tm) return 0;
         return tm.areaHeight() >> tm.scale;
+    }
+
+    /**
+     * Gets the tilemap column of a tile location
+     */
+    //% block="$location column"
+    //% location.shadow=variables_get
+    //% group="Conversions" weight=50 blockGap=8
+    export function locationColumn(location: tiles.Location): number {
+        return screenCoordinateToTile(location.x);
+    }
+
+    /**
+     * Gets the tilemap row of a tile location
+     */
+    //% block="$location row"
+    //% location.shadow=variables_get
+    //% group="Conversions" weight=40 blockGap=8
+    export function locationRow(location: tiles.Location): number {
+        return screenCoordinateToTile(location.y);
     }
 
     /**
