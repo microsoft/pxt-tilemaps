@@ -120,7 +120,7 @@ namespace tilemap {
             scene.physicsEngine.addSprite(sprite);
             tiles.placeOnTile(sprite, loc);
 
-            for (const cb of createdHandlers) cb(sprite)
+            for (const cb of createdHandlers) cb.handler(sprite)
         });
     }
 
