@@ -109,8 +109,18 @@ namespace tilemap {
     //% spriteKind.shadow=spritekind
     //% group="Operations" weight=30 blockGap=8
     export function createSpritesOnTiles(tileKind: Image, spriteKind: number) {
+        const scene = game.currentScene();
+
+        const createdHandlers = scene.createdHandlers
+            .filter(h => h.kind == spriteKind);
+
         forEachTileOfKind(tileKind, loc => {
-            tiles.placeOnTile(sprites.create(img`.`, spriteKind), loc);
+            const sprite = new Sprite(img`.`)
+            sprite.setKind(spriteKind);
+            scene.physicsEngine.addSprite(sprite);
+            tiles.placeOnTile(sprite, loc);
+
+            for (const cb of createdHandlers) cb(sprite)
         });
     }
 
