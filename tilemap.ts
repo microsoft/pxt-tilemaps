@@ -118,9 +118,17 @@ namespace tilemap {
             const sprite = new Sprite(img`.`)
             sprite.setKind(spriteKind);
             scene.physicsEngine.addSprite(sprite);
+
+            // Place on tile so that it can be used in the created
+            // handlers
             tiles.placeOnTile(sprite, loc);
 
             for (const cb of createdHandlers) cb.handler(sprite)
+
+            // The sprite image might have been set by the handler,
+            // causing the sprite to change dimensions and be
+            // off-center. Place it a second time to correct that
+            tiles.placeOnTile(sprite, loc);
         });
     }
 
