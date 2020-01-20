@@ -261,11 +261,22 @@ namespace tilemap {
     }
 
     /**
+     * Gets the neighboring location in the given direction.
+     */
+    //% block="location $direction of $location"
+    //% direction.shadow=direction_editor
+    //% location.shadow=variables_get
+    //% group="Directions" weight=40 blockGap=8
+    export function locationInDirection(location: tiles.Location, direction: number) {
+        return tiles.getTileLocation(
+            columnInDirection(locationColumn(location), direction),
+            rowInDirection(locationRow(location), direction)
+        );
+    }
+
+    /**
      * Gets the neighboring column in the given direction.
      */
-    //% block="column $direction of $column"
-    //% direction.shadow=direction_editor
-    //% group="Directions" weight=40 blockGap=8
     export function columnInDirection(column: number, direction: number) {
         if (direction === WorldDirection.East) return column + 1;
         else if (direction === WorldDirection.West) return column - 1;
@@ -275,9 +286,6 @@ namespace tilemap {
     /**
      * Gets the neighboring row in the given direction.
      */
-    //% block="row $direction of $row"
-    //% direction.shadow=direction_editor
-    //% group="Directions" weight=30
     export function rowInDirection(row: number, direction: number) {
         if (direction === WorldDirection.North) return row - 1;
         else if (direction === WorldDirection.South) return row + 1;
