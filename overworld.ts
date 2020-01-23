@@ -101,6 +101,8 @@ namespace overworld {
     export function loadMap(map: WorldMap) {
         const loaded = getLoadedMap();
 
+        tilemap.destorySpritesOfKind(SpriteKind._OverworldDecoration)
+
         if (loaded) {
             OverWorldState.callUnloadListeners();
         }
@@ -157,15 +159,7 @@ namespace overworld {
         loadMap(getConnectedMap(getLoadedMap(), connectionID));
     }
 
-    /**
-     * Connects the source map to a destination map by the given ID.
-     */
-    //% block="connect $sourceMap to $destination with ID $connectionID"
-    //% sourceMap.shadow=variables_get
-    //% sourceMap.defl=sourceMap
-    //% destination.shadow=create_overworld_map
-    //% group="Connections" weight=20 blockGap=8
-    export function connectMapById(sourceMap: WorldMap, destination: WorldMap, connectionID: number) {
+    function connectMapByIdCore(sourceMap: WorldMap, destination: WorldMap, connectionID: number) {
         if (!sourceMap) return;
 
         for (const connection of sourceMap.connections) {
@@ -176,6 +170,20 @@ namespace overworld {
         }
         sourceMap.connections.push(new WorldMapConnection(connectionID, destination));
     }
+
+    /**
+     * Connects the source map to a destination map by the given ID.
+     */
+    //% block="connect $sourceMap to $destination with ID $connectionID"
+    //% sourceMap.shadow=variables_get
+    //% sourceMap.defl=sourceMap
+    //% destination.shadow=create_overworld_map
+    //% group="Connections" weight=20 blockGap=8
+    export function connectMapById(sourceMap: WorldMap, destination: WorldMap, connectionID: number) {
+        connectMapByIdCore(sourceMap, destination, connectionID);
+        connectMapByIdCore(destination, sourceMap, connectionID);
+    }
+
 
     /**
      * Gets the destination map connected to the source map by the given ID.

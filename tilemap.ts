@@ -1,5 +1,5 @@
 namespace SpriteKind {
-    export const Decoration = SpriteKind.create()
+    export const _OverworldDecoration = SpriteKind.create()
 } 
 
 //% color=#84b89f icon="\uf279"
@@ -72,7 +72,7 @@ namespace tilemap {
 
     /**
      * Cover the tile in the loaded tilemap at a given location with
-     * another tile. Tiles are covered with sprites of kind Decoration.
+     * another tile. Tiles are covered with sprites of kind _OverworldDecoration.
      */
     //% block="cover tile at $location with $cover"
     //% cover.shadow=tileset_tile_picker
@@ -80,7 +80,7 @@ namespace tilemap {
     //% group="Operations" weight=50 blockGap=8
     //% location.shadow=mapgettile
     export function coverTile(location: tiles.Location, cover: Image) {
-        const coverSprite = sprites.create(cover, SpriteKind.Decoration);
+        const coverSprite = sprites.create(cover, SpriteKind._OverworldDecoration);
         coverSprite.setFlag(SpriteFlag.Ghost, true);
         coverSprite.z = -1;
         tiles.placeOnTile(coverSprite, location);
@@ -88,7 +88,7 @@ namespace tilemap {
 
     /**
      * Cover all tiles of a given kind in the loaded tilemap with
-     * another tile. Tiles are covered with sprites of kind Decoration.
+     * another tile. Tiles are covered with sprites of kind _OverworldDecoration.
      */
     //% block="cover all $tileKind tiles with $cover"
     //% tileKind.shadow=tileset_tile_picker
