@@ -122,7 +122,7 @@ namespace overworld {
     //% block="loaded map"
     //% group="Creation" weight=30
     export function getLoadedMap(): WorldMap {
-        return getMapAtWorldLocation(loadedWorldColumn(), loadedWorldRow());
+        return OverWorldState.getInstance().loadedMap
     }
 
     /**
