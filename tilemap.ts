@@ -29,6 +29,19 @@ namespace tilemap {
         return tileIsCore(locationColumn(location), locationRow(location), tile);
     }
 
+    /**
+     * Determines if the tile in the loaded tilemap at the given location
+     * is a wall.
+     */
+    //% block="tile at $location is wall"
+    //% location.shadow=mapgettile
+    //% group="Operations" weight=79
+    export function tileIsWall(location: tiles.Location): boolean {
+        const tm = game.currentScene().tileMap;
+
+        return tm ? tm.isObstacle(locationColumn(location), locationRow(location)) : false;
+    }
+
     function tileIsCore(col: number, row: number, tile: Image): boolean {
         return tile.equals(tiles.getTileAt(col, row));
     }
