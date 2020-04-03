@@ -291,8 +291,8 @@ namespace tilemap {
      * Gets the neighboring column in the given direction.
      */
     export function columnInDirection(column: number, direction: number) {
-        if (direction === scene.CollisionDirection.Right) return column + 1;
-        else if (direction === scene.CollisionDirection.Left) return column - 1;
+        if (direction === CollisionDirection.Right) return column + 1;
+        else if (direction === CollisionDirection.Left) return column - 1;
         else return column;
     }
 
@@ -300,8 +300,8 @@ namespace tilemap {
      * Gets the neighboring row in the given direction.
      */
     export function rowInDirection(row: number, direction: number) {
-        if (direction === scene.CollisionDirection.Top) return row - 1;
-        else if (direction === scene.CollisionDirection.Bottom) return row + 1;
+        if (direction === CollisionDirection.Top) return row - 1;
+        else if (direction === CollisionDirection.Bottom) return row + 1;
         else return row;
     }
 
@@ -312,17 +312,17 @@ namespace tilemap {
     //% block="for each direction $direction"
     //% draggableParameters="reporter" handlerStatement
     //% group="Directions" weight=20
-    export function forEachDirection(cb: (direction: scene.CollisionDirection) => void) {
-        cb(scene.CollisionDirection.Top);
-        cb(scene.CollisionDirection.Right);
-        cb(scene.CollisionDirection.Bottom);
-        cb(scene.CollisionDirection.Left);
+    export function forEachDirection(cb: (direction: CollisionDirection) => void) {
+        cb(CollisionDirection.Top);
+        cb(CollisionDirection.Right);
+        cb(CollisionDirection.Bottom);
+        cb(CollisionDirection.Left);
     }
 
     //% blockId=direction_editor shim=TD_ID
     //% block="$direction"
     //% group="Directions" weight=10
-    export function _directionEditor(direction: scene.CollisionDirection): scene.CollisionDirection {
+    export function _directionEditor(direction: CollisionDirection): CollisionDirection {
         return direction;
     }
 }
