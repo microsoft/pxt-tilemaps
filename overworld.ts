@@ -1,18 +1,7 @@
-enum WorldDirection {
-    //% block=North
-    North,
-    //% block=East
-    East,
-    //% block=South
-    South,
-    //% block=West
-    West
-}
-
 //% color=#b8849b icon="\uf0ac"
 //% groups='["Creation", "Connections", "World Grid"]'
 namespace overworld {
-    export const OVERWORLD_MAP_ID = 7686; 
+    export const OVERWORLD_MAP_ID = 7686;
     export const MAP_LOADED_EVENT = 7687;
 
     export class WorldMap {

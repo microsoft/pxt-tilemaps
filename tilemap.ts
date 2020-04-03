@@ -1,6 +1,6 @@
 namespace SpriteKind {
     export const _OverworldDecoration = SpriteKind.create()
-} 
+}
 
 //% color=#84b89f icon="\uf279"
 //% groups='["Operations","Values","Conversions","Directions"]'
@@ -112,7 +112,7 @@ namespace tilemap {
     export function coverAllTiles(tileKind: Image, cover: Image) {
         forEachTileOfKind(tileKind, loc => coverTile(loc, cover));
     }
-    
+
     /**
      * On each tile of a given kind, create a sprite of a given SpriteKind.
      */
@@ -156,7 +156,7 @@ namespace tilemap {
     //% to.decompileIndirectFixedInstances=true
     //% group="Operations" weight=20
     export function replaceAllTiles(from: Image, to: Image) {
-        forEachTileOfKind(from, loc => 
+        forEachTileOfKind(from, loc =>
             tiles.setTileAt(loc, to)
         );
     }
@@ -291,8 +291,8 @@ namespace tilemap {
      * Gets the neighboring column in the given direction.
      */
     export function columnInDirection(column: number, direction: number) {
-        if (direction === WorldDirection.East) return column + 1;
-        else if (direction === WorldDirection.West) return column - 1;
+        if (direction === scene.CollisionDirection.Right) return column + 1;
+        else if (direction === scene.CollisionDirection.Left) return column - 1;
         else return column;
     }
 
@@ -300,29 +300,29 @@ namespace tilemap {
      * Gets the neighboring row in the given direction.
      */
     export function rowInDirection(row: number, direction: number) {
-        if (direction === WorldDirection.North) return row - 1;
-        else if (direction === WorldDirection.South) return row + 1;
+        if (direction === scene.CollisionDirection.Top) return row - 1;
+        else if (direction === scene.CollisionDirection.Bottom) return row + 1;
         else return row;
     }
 
     /**
-     * Executes a piece of code for each cardinal direction starting at North
+     * Executes a piece of code for each direction of Top, Right, Bottom, Left starting at Top
      * and going clockwise.
      */
     //% block="for each direction $direction"
     //% draggableParameters="reporter" handlerStatement
     //% group="Directions" weight=20
-    export function forEachDirection(cb: (direction: WorldDirection) => void) {
-        cb(WorldDirection.North);
-        cb(WorldDirection.East);
-        cb(WorldDirection.South);
-        cb(WorldDirection.West);
+    export function forEachDirection(cb: (direction: scene.CollisionDirection) => void) {
+        cb(scene.CollisionDirection.Top);
+        cb(scene.CollisionDirection.Right);
+        cb(scene.CollisionDirection.Bottom);
+        cb(scene.CollisionDirection.Left);
     }
 
     //% blockId=direction_editor shim=TD_ID
     //% block="$direction"
     //% group="Directions" weight=10
-    export function _directionEditor(direction: WorldDirection): WorldDirection {
+    export function _directionEditor(direction: scene.CollisionDirection): scene.CollisionDirection {
         return direction;
     }
 }
