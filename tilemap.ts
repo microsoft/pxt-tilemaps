@@ -50,13 +50,13 @@ namespace tilemap {
      * Executes a piece of code for every tile of a given kind in the loaded
      * tilemap.
      */
-    ///% block="for each $tileKind tile at $location"
-    ///% draggableParameters="reporter" handlerStatement
-    ///% tileKind.shadow=tileset_tile_picker
-    ///% tileKind.decompileIndirectFixedInstances=true
-    ///% group="Operations" weight=70 blockGap=8
     export function forEachTileOfKind(tileKind: Image, cb: (location: tiles.Location) => void) {
         // TODO: handlerStatement does not work right
+        // block="for each $tileKind tile at $location"
+        // draggableParameters="reporter" handlerStatement
+        // tileKind.shadow=tileset_tile_picker
+        // tileKind.decompileIndirectFixedInstances=true
+        // group="Operations" weight=70 blockGap=8
         const height = tilemapRows();
         const width = tilemapColumns();
 
@@ -70,11 +70,11 @@ namespace tilemap {
     /**
      * Executes a piece of code for every tile in the loaded tilemap
      */
-    ///% block="for each tile at $location with image $tile"
-    ///% draggableParameters="reporter" handlerStatement
-    ///% group="Operations" weight=60
     export function forEachTileOfMap(cb: (location: tiles.Location, tile: Image) => void) {
         // TODO: handlerStatement does not work right
+        // block="for each tile at $location with image $tile"
+        // draggableParameters="reporter" handlerStatement
+        // group="Operations" weight=60
         const height = tilemapRows();
         const width = tilemapColumns();
 
@@ -311,11 +311,11 @@ namespace tilemap {
      * Executes a piece of code for each direction of Top, Right, Bottom, Left starting at Top
      * and going clockwise.
      */
-    ///% block="for each direction $direction"
-    ///% draggableParameters="reporter" handlerStatement
-    ///% group="Directions" weight=20
     export function forEachDirection(cb: (direction: CollisionDirection) => void) {
         // TODO: handlerStatement does not work right
+        // block="for each direction $direction"
+        // draggableParameters="reporter" handlerStatement
+        // group="Directions" weight=20
         cb(CollisionDirection.Top);
         cb(CollisionDirection.Right);
         cb(CollisionDirection.Bottom);
