@@ -3,6 +3,7 @@
 // - replace "cover" with create cover sprite
 
 namespace SpriteKind {
+    //% isKind
     export const TileSprite = SpriteKind.create()
 }
 
