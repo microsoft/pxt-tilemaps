@@ -13,23 +13,11 @@ namespace tilemap {
     //
     // Sprites
     //
-
     /**
-     * Gets the tile location of a sprite.
-     */
-    //% block="location of $s"
-    //% s.shadow=variables_get
-    //% s.defl=sprite
-    //% group="Sprites" weight=90
-    export function locationOfSprite(s: Sprite): tiles.Location {
-        return tiles.getTileLocation(screenCoordinateToTile(s.x), screenCoordinateToTile(s.y));
-    }
-
-    /**
-     * Cover the tile in the loaded tilemap at a given location with
-     * another tile that is a sprite of kind TileSprite. This sprite
-     * will have the "Ghost" property enabled meaning it will not collide
-     * or overlap with other sprites. This can be changed using "set mySprite ____ off/on" block.
+     * Cover the tile at a given location with a sprite of a tile image.
+     * This sprite is of kind "TileSprite" and will be automatically removed when
+     * loading to a new tilemap. Further, it has the "ghost" property enabled and
+     * will not collide with other sprites.
      */
     //% block="sprite from tile $cover at $location"
     //% cover.shadow=tileset_tile_picker
@@ -46,10 +34,10 @@ namespace tilemap {
     }
 
     /**
-     * Cover the tile in the loaded tilemap at a given location with
-     * another tile that is a sprite of kind TileSprite. This sprite
-     * will have the "Ghost" property enabled meaning it will not collide
-     * or overlap with other sprites. This can be changed using "set mySprite ____ off/on" block.
+     * Cover the tile at a given location with a sprite of a tile image.
+     * This sprite is of kind "TileSprite" and will be automatically removed when
+     * loading to a new tilemap. Further, it has the "ghost" property enabled and
+     * will not collide with other sprites.
      */
     //% block="create sprite from tile $cover at $location"
     //% cover.shadow=tileset_tile_picker
@@ -61,10 +49,10 @@ namespace tilemap {
     }
 
     /**
-     * Cover all tiles of a given kind in the loaded tilemap with
-     * another tile that is a sprite of kind TileSprite. These sprites
-     * will have the "Ghost" property enabled meaning it will not collide
-     * or overlap with other sprites. This can be changed using "set mySprite ____ off/on" block.
+     * Cover all tiles of a given kind with a sprite of a tile image.
+     * These sprites are of kind "TileSprite" and will be automatically removed when
+     * loading to a new tilemap. Further, they have the "ghost" property enabled and
+     * will not collide with other sprites.
      */
     //% block="on each $tileKind tile create sprite from tile $cover"
     //% tileKind.shadow=tileset_tile_picker
@@ -74,6 +62,17 @@ namespace tilemap {
     //% group="Sprites" weight=40 blockGap=8
     export function coverAllTiles(tileKind: Image, cover: Image) {
         forEachTileOfKind(tileKind, loc => createTileSprite(loc, cover));
+    }
+
+    /**
+     * Gets the tile location of a sprite.
+     */
+    //% block="location of $s"
+    //% s.shadow=variables_get
+    //% s.defl=sprite
+    //% group="Sprites" weight=90
+    export function locationOfSprite(s: Sprite): tiles.Location {
+        return tiles.getTileLocation(screenCoordinateToTile(s.x), screenCoordinateToTile(s.y));
     }
 
     /**
