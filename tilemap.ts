@@ -1,21 +1,32 @@
+// TODO:
+// - different categories in Tilemap
+// - replace "cover" with create cover sprite
+
 namespace SpriteKind {
-    export const _OverworldDecoration = SpriteKind.create()
+    export const TileSprite = SpriteKind.create()
 }
 
 //% color=#84b89f icon="\uf279"
-//% groups='["Operations","Values","Conversions","Directions"]'
+//% groups='["Sprites","Tiles","Tilemap","Camera"]'
 namespace tilemap {
+    //
+    // Sprites
+    //
+
     /**
      * Gets the tile location of a sprite.
      */
     //% block="location of $s"
     //% s.shadow=variables_get
     //% s.defl=sprite
-    //% group="Operations" weight=90
+    //% group="Sprites" weight=90
     export function locationOfSprite(s: Sprite): tiles.Location {
         return tiles.getTileLocation(screenCoordinateToTile(s.x), screenCoordinateToTile(s.y));
     }
 
+    //
+    // Tiles
+    //
     /**
      * Determines if the tile in the loaded tilemap at the given location
      * is of a particular kind.
@@ -24,7 +35,7 @@ namespace tilemap {
     //% location.shadow=mapgettile
     //% tile.shadow=tileset_tile_picker
     //% tile.decompileIndirectFixedInstances=true
-    //% group="Operations" weight=80
+    //% group="Tiles" weight=80
     export function tileIs(location: tiles.Location, tile: Image): boolean {
         return tileIsCore(locationColumn(location), locationRow(location), tile);
     }
@@ -35,7 +46,7 @@ namespace tilemap {
      */
     //% block="tile at $location is wall"
     //% location.shadow=mapgettile
-    //% group="Operations" weight=79
+    //% group="Tiles" weight=79
     export function tileIsWall(location: tiles.Location): boolean {
         const tm = game.currentScene().tileMap;
 
@@ -56,7 +67,7 @@ namespace tilemap {
         // draggableParameters="reporter" handlerStatement
         // tileKind.shadow=tileset_tile_picker
         // tileKind.decompileIndirectFixedInstances=true
-        // group="Operations" weight=70 blockGap=8
+        // group="Tiles" weight=70 blockGap=8
         const height = tilemapRows();
         const width = tilemapColumns();
 
@@ -74,7 +85,7 @@ namespace tilemap {
         // TODO: handlerStatement does not work right
         // block="for each tile at $location with image $tile"
         // draggableParameters="reporter" handlerStatement
-        // group="Operations" weight=60
+        // group="Tiles" weight=60
         const height = tilemapRows();
         const width = tilemapColumns();
 
@@ -85,38 +96,58 @@ namespace tilemap {
         }
     }
 
+    // Sprites
     /**
      * Cover the tile in the loaded tilemap at a given location with
-     * another tile. Tiles are covered with sprites of kind _OverworldDecoration.
+     * another tile that is a sprite of kind TileSprite.
      */
-    //% block="cover tile at $location with $cover"
+    //% block="new sprite from tile $cover at $location"
     //% cover.shadow=tileset_tile_picker
     //% cover.decompileIndirectFixedInstances=true
-    //% group="Operations" weight=50 blockGap=8
+    //% group="Sprites" weight=50 blockGap=8
     //% location.shadow=mapgettile
-    export function coverTile(location: tiles.Location, cover: Image) {
-        const coverSprite = sprites.create(cover, SpriteKind._OverworldDecoration);
+    //% blockSetVariable=myTileSprite
+    export function createTileSprite(location: tiles.Location, cover: Image): Sprite {
+        const coverSprite = sprites.create(cover, SpriteKind.TileSprite);
         coverSprite.setFlag(SpriteFlag.Ghost, true);
         coverSprite.z = -1;
         tiles.placeOnTile(coverSprite, location);
+        return coverSprite
     }
 
+    // Sprites
+    /**
+     * Cover the tile in the loaded tilemap at a given location with
+     * another tile that is a sprite of kind TileSprite.
+     */
+    //% block="create sprite from tile $cover at $location"
+    //% cover.shadow=tileset_tile_picker
+    //% cover.decompileIndirectFixedInstances=true
+    //% group="Cover" weight=50 blockGap=8
+    //% location.shadow=mapgettile
+    export function createTileSpriteStmt(location: tiles.Location, cover: Image) {
+        createTileSprite(location, cover);
+    }
+
+    // Sprites
     /**
      * Cover all tiles of a given kind in the loaded tilemap with
-     * another tile. Tiles are covered with sprites of kind _OverworldDecoration.
+     * another tile that is a sprite of kind TileSprite.
      */
-    //% block="cover all $tileKind tiles with $cover"
+    //% block="on each $tileKind tile create a sprite from tile $cover"
     //% tileKind.shadow=tileset_tile_picker
     //% tileKind.decompileIndirectFixedInstances=true
     //% cover.shadow=tileset_tile_picker
     //% cover.decompileIndirectFixedInstances=true
-    //% group="Operations" weight=40 blockGap=8
+    //% group="Cover" weight=40 blockGap=8
     export function coverAllTiles(tileKind: Image, cover: Image) {
-        forEachTileOfKind(tileKind, loc => coverTile(loc, cover));
+        forEachTileOfKind(tileKind, loc => createTileSprite(loc, cover));
     }
 
+    // Sprites
     /**
-     * On each tile of a given kind, create a sprite of a given SpriteKind.
+     * On each tile of a given kind, create a sprite of a given SpriteKind. 
+     * Useful to use with the "on created [...]" sprite block.
      */
     //% block="on each $tileKind tile create a sprite of kind $spriteKind"
     //% tileKind.shadow=tileset_tile_picker
@@ -147,6 +178,7 @@ namespace tilemap {
         });
     }
 
+    // Tiles
     /**
      * Replace all tiles of a given kind in the loaded tilemap with
      * another tile.
@@ -163,6 +195,7 @@ namespace tilemap {
         );
     }
 
+    // Camera
     /**
      * Center the camera on a given tile location.
      */
@@ -173,6 +206,7 @@ namespace tilemap {
         scene.centerCameraAt(location.x, location.y);
     }
 
+    // Sprites
     /**
      * Destroy all sprites of a given kind. Useful when switching
      * between tilemaps.
@@ -184,6 +218,7 @@ namespace tilemap {
         sprites.allOfKind(spriteKind).forEach(s => s.destroy());
     }
 
+    // Tilemap
     /**
      * Returns the width of tiles in the loaded tilemap.
      */
@@ -196,6 +231,7 @@ namespace tilemap {
         return 1 << tm.scale;
     }
 
+    // Tilemap
     /**
      * Returns the number of columns in the currently loaded tilemap.
      */
@@ -209,6 +245,7 @@ namespace tilemap {
         return tm.areaWidth() >> tm.scale;
     }
 
+    // Tilemap
     /**
      * Returns the number of rows in the currently loaded tilemap.
      */
@@ -221,6 +258,7 @@ namespace tilemap {
         return tm.areaHeight() >> tm.scale;
     }
 
+    // Tilemap
     /**
      * Gets the tilemap column of a tile location
      */
@@ -231,6 +269,7 @@ namespace tilemap {
         return screenCoordinateToTile(location.x);
     }
 
+    // Tilemap
     /**
      * Gets the tilemap row of a tile location
      */
@@ -241,10 +280,11 @@ namespace tilemap {
         return screenCoordinateToTile(location.y);
     }
 
+    // Tilemap
     /**
-     * Converts a screen coordinate to a tilemap coordinate.
+     * Converts a screen coordinate to a tilemap location.
      */
-    //% block="screen coordinate $value to tile coordinate"
+    //% block="screen coordinate $value to tile location"
     //% group="Conversions" weight=30 blockGap=8
     export function screenCoordinateToTile(value: number) {
         const tm = game.currentScene().tileMap;
@@ -252,8 +292,9 @@ namespace tilemap {
         return value >> tm.scale;
     }
 
+    // Tilemap
     /**
-     * Converts a tilemap coordinate to a screen coordinate.
+     * Converts a tilemap location to a screen coordinate.
      */
     //% block="tile coordinate $value to screen coordinate"
     //% group="Conversions" weight=20 blockGap=8
@@ -263,6 +304,7 @@ namespace tilemap {
         return value << tm.scale;
     }
 
+    // Tilemap
     /**
      * Converts a tilemap coordinate to a screen coordinate and
      * adds half a tile width.
@@ -275,10 +317,11 @@ namespace tilemap {
         return (value << tm.scale) + (1 << (tm.scale - 1));
     }
 
+    // Tiles
     /**
-     * Gets the neighboring location in the given direction.
+     * Starting from a tile location, get the neighboring tile location in the given direction.
      */
-    //% block="location $direction of $location"
+    //% block="tile location in $direction from location $location"
     //% direction.shadow=direction_editor
     //% location.shadow=variables_get
     //% group="Directions" weight=40 blockGap=8
@@ -322,6 +365,7 @@ namespace tilemap {
         cb(CollisionDirection.Left);
     }
 
+    // Tiles
     //% blockId=direction_editor shim=TD_ID
     //% block="$direction"
     //% group="Directions" weight=10
