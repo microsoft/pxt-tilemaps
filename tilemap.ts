@@ -26,9 +26,11 @@ namespace tilemap {
 
     /**
      * Cover the tile in the loaded tilemap at a given location with
-     * another tile that is a sprite of kind TileSprite.
+     * another tile that is a sprite of kind TileSprite. This sprite
+     * will have the "Ghost" property enabled meaning it will not collide
+     * or overlap with other sprites. This can be changed using "set mySprite ____ off/on" block.
      */
-    //% block="new sprite from tile $cover at $location"
+    //% block="sprite from tile $cover at $location"
     //% cover.shadow=tileset_tile_picker
     //% cover.decompileIndirectFixedInstances=true
     //% group="Sprites" weight=50 blockGap=8
@@ -44,7 +46,9 @@ namespace tilemap {
 
     /**
      * Cover the tile in the loaded tilemap at a given location with
-     * another tile that is a sprite of kind TileSprite.
+     * another tile that is a sprite of kind TileSprite. This sprite
+     * will have the "Ghost" property enabled meaning it will not collide
+     * or overlap with other sprites. This can be changed using "set mySprite ____ off/on" block.
      */
     //% block="create sprite from tile $cover at $location"
     //% cover.shadow=tileset_tile_picker
@@ -57,9 +61,11 @@ namespace tilemap {
 
     /**
      * Cover all tiles of a given kind in the loaded tilemap with
-     * another tile that is a sprite of kind TileSprite.
+     * another tile that is a sprite of kind TileSprite. These sprites
+     * will have the "Ghost" property enabled meaning it will not collide
+     * or overlap with other sprites. This can be changed using "set mySprite ____ off/on" block.
      */
-    //% block="on each $tileKind tile create a sprite from tile $cover"
+    //% block="on each $tileKind tile create sprite from tile $cover"
     //% tileKind.shadow=tileset_tile_picker
     //% tileKind.decompileIndirectFixedInstances=true
     //% cover.shadow=tileset_tile_picker
@@ -73,7 +79,7 @@ namespace tilemap {
      * On each tile of a given kind, create a sprite of a given SpriteKind. 
      * Useful to use with the "on created [...]" sprite block.
      */
-    //% block="on each $tileKind tile create a sprite of kind $spriteKind"
+    //% block="on each $tileKind tile create sprite of kind $spriteKind"
     //% tileKind.shadow=tileset_tile_picker
     //% tileKind.decompileIndirectFixedInstances=true
     //% spriteKind.shadow=spritekind
