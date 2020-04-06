@@ -7,7 +7,7 @@ namespace SpriteKind {
 }
 
 //% color=#84b89f icon="\uf279"
-//% groups='["Sprites","Tiles","Tilemap","Camera"]'
+//% groups='["Sprites", "Tiles", "Tilemap", "Camera"]'
 namespace tilemap {
     //
     // Sprites
@@ -24,9 +24,99 @@ namespace tilemap {
         return tiles.getTileLocation(screenCoordinateToTile(s.x), screenCoordinateToTile(s.y));
     }
 
+    /**
+     * Cover the tile in the loaded tilemap at a given location with
+     * another tile that is a sprite of kind TileSprite.
+     */
+    //% block="new sprite from tile $cover at $location"
+    //% cover.shadow=tileset_tile_picker
+    //% cover.decompileIndirectFixedInstances=true
+    //% group="Sprites" weight=50 blockGap=8
+    //% location.shadow=mapgettile
+    //% blockSetVariable=myTileSprite
+    export function createTileSprite(location: tiles.Location, cover: Image): Sprite {
+        const coverSprite = sprites.create(cover, SpriteKind.TileSprite);
+        coverSprite.setFlag(SpriteFlag.Ghost, true);
+        coverSprite.z = -1;
+        tiles.placeOnTile(coverSprite, location);
+        return coverSprite
+    }
+
+    /**
+     * Cover the tile in the loaded tilemap at a given location with
+     * another tile that is a sprite of kind TileSprite.
+     */
+    //% block="create sprite from tile $cover at $location"
+    //% cover.shadow=tileset_tile_picker
+    //% cover.decompileIndirectFixedInstances=true
+    //% group="Sprites" weight=50 blockGap=8
+    //% location.shadow=mapgettile
+    export function createTileSpriteStmt(location: tiles.Location, cover: Image) {
+        createTileSprite(location, cover);
+    }
+
+    /**
+     * Cover all tiles of a given kind in the loaded tilemap with
+     * another tile that is a sprite of kind TileSprite.
+     */
+    //% block="on each $tileKind tile create a sprite from tile $cover"
+    //% tileKind.shadow=tileset_tile_picker
+    //% tileKind.decompileIndirectFixedInstances=true
+    //% cover.shadow=tileset_tile_picker
+    //% cover.decompileIndirectFixedInstances=true
+    //% group="Sprites" weight=40 blockGap=8
+    export function coverAllTiles(tileKind: Image, cover: Image) {
+        forEachTileOfKind(tileKind, loc => createTileSprite(loc, cover));
+    }
+
+    /**
+     * On each tile of a given kind, create a sprite of a given SpriteKind. 
+     * Useful to use with the "on created [...]" sprite block.
+     */
+    //% block="on each $tileKind tile create a sprite of kind $spriteKind"
+    //% tileKind.shadow=tileset_tile_picker
+    //% tileKind.decompileIndirectFixedInstances=true
+    //% spriteKind.shadow=spritekind
+    //% group="Sprites" weight=30 blockGap=8
+    export function createSpritesOnTiles(tileKind: Image, spriteKind: number) {
+        const scene = game.currentScene();
+
+        const createdHandlers = scene.createdHandlers
+            .filter(h => h.kind == spriteKind);
+
+        forEachTileOfKind(tileKind, loc => {
+            const sprite = new Sprite(img`.`)
+            sprite.setKind(spriteKind);
+            scene.physicsEngine.addSprite(sprite);
+
+            // Place on tile so that it can be used in the created
+            // handlers
+            tiles.placeOnTile(sprite, loc);
+
+            for (const cb of createdHandlers) cb.handler(sprite)
+
+            // The sprite image might have been set by the handler,
+            // causing the sprite to change dimensions and be
+            // off-center. Place it a second time to correct that
+            tiles.placeOnTile(sprite, loc);
+        });
+    }
+
+    /**
+     * Destroy all sprites of a given kind. Useful when switching
+     * between tilemaps.
+     */
+    //% block="destroy all sprites of kind $spriteKind"
+    //% spriteKind.shadow=spritekind
+    //% group="Sprites" weight=9 blockGap=8
+    export function destorySpritesOfKind(spriteKind: number) {
+        sprites.allOfKind(spriteKind).forEach(s => s.destroy());
+    }
+
     //
     // Tiles
     //
+
     /**
      * Determines if the tile in the loaded tilemap at the given location
      * is of a particular kind.
@@ -96,89 +186,6 @@ namespace tilemap {
         }
     }
 
-    // Sprites
-    /**
-     * Cover the tile in the loaded tilemap at a given location with
-     * another tile that is a sprite of kind TileSprite.
-     */
-    //% block="new sprite from tile $cover at $location"
-    //% cover.shadow=tileset_tile_picker
-    //% cover.decompileIndirectFixedInstances=true
-    //% group="Sprites" weight=50 blockGap=8
-    //% location.shadow=mapgettile
-    //% blockSetVariable=myTileSprite
-    export function createTileSprite(location: tiles.Location, cover: Image): Sprite {
-        const coverSprite = sprites.create(cover, SpriteKind.TileSprite);
-        coverSprite.setFlag(SpriteFlag.Ghost, true);
-        coverSprite.z = -1;
-        tiles.placeOnTile(coverSprite, location);
-        return coverSprite
-    }
-
-    // Sprites
-    /**
-     * Cover the tile in the loaded tilemap at a given location with
-     * another tile that is a sprite of kind TileSprite.
-     */
-    //% block="create sprite from tile $cover at $location"
-    //% cover.shadow=tileset_tile_picker
-    //% cover.decompileIndirectFixedInstances=true
-    //% group="Cover" weight=50 blockGap=8
-    //% location.shadow=mapgettile
-    export function createTileSpriteStmt(location: tiles.Location, cover: Image) {
-        createTileSprite(location, cover);
-    }
-
-    // Sprites
-    /**
-     * Cover all tiles of a given kind in the loaded tilemap with
-     * another tile that is a sprite of kind TileSprite.
-     */
-    //% block="on each $tileKind tile create a sprite from tile $cover"
-    //% tileKind.shadow=tileset_tile_picker
-    //% tileKind.decompileIndirectFixedInstances=true
-    //% cover.shadow=tileset_tile_picker
-    //% cover.decompileIndirectFixedInstances=true
-    //% group="Cover" weight=40 blockGap=8
-    export function coverAllTiles(tileKind: Image, cover: Image) {
-        forEachTileOfKind(tileKind, loc => createTileSprite(loc, cover));
-    }
-
-    // Sprites
-    /**
-     * On each tile of a given kind, create a sprite of a given SpriteKind. 
-     * Useful to use with the "on created [...]" sprite block.
-     */
-    //% block="on each $tileKind tile create a sprite of kind $spriteKind"
-    //% tileKind.shadow=tileset_tile_picker
-    //% tileKind.decompileIndirectFixedInstances=true
-    //% spriteKind.shadow=spritekind
-    //% group="Operations" weight=30 blockGap=8
-    export function createSpritesOnTiles(tileKind: Image, spriteKind: number) {
-        const scene = game.currentScene();
-
-        const createdHandlers = scene.createdHandlers
-            .filter(h => h.kind == spriteKind);
-
-        forEachTileOfKind(tileKind, loc => {
-            const sprite = new Sprite(img`.`)
-            sprite.setKind(spriteKind);
-            scene.physicsEngine.addSprite(sprite);
-
-            // Place on tile so that it can be used in the created
-            // handlers
-            tiles.placeOnTile(sprite, loc);
-
-            for (const cb of createdHandlers) cb.handler(sprite)
-
-            // The sprite image might have been set by the handler,
-            // causing the sprite to change dimensions and be
-            // off-center. Place it a second time to correct that
-            tiles.placeOnTile(sprite, loc);
-        });
-    }
-
-    // Tiles
     /**
      * Replace all tiles of a given kind in the loaded tilemap with
      * another tile.
@@ -188,143 +195,20 @@ namespace tilemap {
     //% from.decompileIndirectFixedInstances=true
     //% to.shadow=tileset_tile_picker
     //% to.decompileIndirectFixedInstances=true
-    //% group="Operations" weight=20
+    //% group="Tiles" weight=20
     export function replaceAllTiles(from: Image, to: Image) {
         forEachTileOfKind(from, loc =>
             tiles.setTileAt(loc, to)
         );
     }
 
-    // Camera
-    /**
-     * Center the camera on a given tile location.
-     */
-    //% block="center camera on $location"
-    //% group="Operations" weight=10 blockGap=8
-    //% location.shadow=mapgettile
-    export function centerCameraOnTile(location: tiles.Location) {
-        scene.centerCameraAt(location.x, location.y);
-    }
-
-    // Sprites
-    /**
-     * Destroy all sprites of a given kind. Useful when switching
-     * between tilemaps.
-     */
-    //% block="destroy all sprites of kind $spriteKind"
-    //% spriteKind.shadow=spritekind
-    //% group="Operations" weight=9 blockGap=8
-    export function destorySpritesOfKind(spriteKind: number) {
-        sprites.allOfKind(spriteKind).forEach(s => s.destroy());
-    }
-
-    // Tilemap
-    /**
-     * Returns the width of tiles in the loaded tilemap.
-     */
-    //% block="tile width"
-    //% group="Values" weight=30
-    export function tileWidth(): number {
-        const tm = game.currentScene().tileMap;
-
-        if (!tm) return 0;
-        return 1 << tm.scale;
-    }
-
-    // Tilemap
-    /**
-     * Returns the number of columns in the currently loaded tilemap.
-     */
-    //% block="tilemap columns"
-    //% group="Values" weight=20 blockGap=8
-    export function tilemapColumns(): number {
-        const tm = game.currentScene().tileMap;
-
-        if (!tm) return 0;
-        const height = tm.areaHeight() >> tm.scale;
-        return tm.areaWidth() >> tm.scale;
-    }
-
-    // Tilemap
-    /**
-     * Returns the number of rows in the currently loaded tilemap.
-     */
-    //% block="tilemap rows"
-    //% group="Values" weight=10 blockGap=8
-    export function tilemapRows(): number {
-        const tm = game.currentScene().tileMap;
-
-        if (!tm) return 0;
-        return tm.areaHeight() >> tm.scale;
-    }
-
-    // Tilemap
-    /**
-     * Gets the tilemap column of a tile location
-     */
-    //% block="$location column"
-    //% location.shadow=variables_get
-    //% group="Conversions" weight=50 blockGap=8
-    export function locationColumn(location: tiles.Location): number {
-        return screenCoordinateToTile(location.x);
-    }
-
-    // Tilemap
-    /**
-     * Gets the tilemap row of a tile location
-     */
-    //% block="$location row"
-    //% location.shadow=variables_get
-    //% group="Conversions" weight=40 blockGap=8
-    export function locationRow(location: tiles.Location): number {
-        return screenCoordinateToTile(location.y);
-    }
-
-    // Tilemap
-    /**
-     * Converts a screen coordinate to a tilemap location.
-     */
-    //% block="screen coordinate $value to tile location"
-    //% group="Conversions" weight=30 blockGap=8
-    export function screenCoordinateToTile(value: number) {
-        const tm = game.currentScene().tileMap;
-        if (!tm) return value >> 4;
-        return value >> tm.scale;
-    }
-
-    // Tilemap
-    /**
-     * Converts a tilemap location to a screen coordinate.
-     */
-    //% block="tile coordinate $value to screen coordinate"
-    //% group="Conversions" weight=20 blockGap=8
-    export function tileCoordinateToScreen(value: number) {
-        const tm = game.currentScene().tileMap;
-        if (!tm) return value << 4;
-        return value << tm.scale;
-    }
-
-    // Tilemap
-    /**
-     * Converts a tilemap coordinate to a screen coordinate and
-     * adds half a tile width.
-     */
-    //% block="centered tile coordinate $value to screen coordinate"
-    //% group="Conversions" weight=10 blockGap=8
-    export function centeredTileCoordinateToScreen(value: number) {
-        const tm = game.currentScene().tileMap;
-        if (!tm) return (value << 4) + 8;
-        return (value << tm.scale) + (1 << (tm.scale - 1));
-    }
-
-    // Tiles
     /**
      * Starting from a tile location, get the neighboring tile location in the given direction.
      */
     //% block="tile location in $direction from location $location"
     //% direction.shadow=direction_editor
     //% location.shadow=variables_get
-    //% group="Directions" weight=40 blockGap=8
+    //% group="Tiles" weight=40 blockGap=8
     export function locationInDirection(location: tiles.Location, direction: number) {
         return tiles.getTileLocation(
             columnInDirection(locationColumn(location), direction),
@@ -358,18 +242,126 @@ namespace tilemap {
         // TODO: handlerStatement does not work right
         // block="for each direction $direction"
         // draggableParameters="reporter" handlerStatement
-        // group="Directions" weight=20
+        // group="Tiles" weight=20
         cb(CollisionDirection.Top);
         cb(CollisionDirection.Right);
         cb(CollisionDirection.Bottom);
         cb(CollisionDirection.Left);
     }
 
-    // Tiles
     //% blockId=direction_editor shim=TD_ID
     //% block="$direction"
-    //% group="Directions" weight=10
+    //% group="Tiles" weight=10
     export function _directionEditor(direction: CollisionDirection): CollisionDirection {
         return direction;
+    }
+
+    //
+    // Camera
+    //
+
+    /**
+     * Center the camera on a given tile location.
+     */
+    //% block="center camera on $location"
+    //% group="Camera" weight=10 blockGap=8
+    //% location.shadow=mapgettile
+    export function centerCameraOnTile(location: tiles.Location) {
+        scene.centerCameraAt(location.x, location.y);
+    }
+
+    //
+    // Tilemap
+    //
+
+    /**
+     * Returns the width of tiles in the loaded tilemap.
+     */
+    //% block="tile width"
+    //% group="Tilemap" weight=30
+    export function tileWidth(): number {
+        const tm = game.currentScene().tileMap;
+
+        if (!tm) return 0;
+        return 1 << tm.scale;
+    }
+
+    /**
+     * Returns the number of columns in the currently loaded tilemap.
+     */
+    //% block="tilemap columns"
+    //% group="Tilemap" weight=20 blockGap=8
+    export function tilemapColumns(): number {
+        const tm = game.currentScene().tileMap;
+
+        if (!tm) return 0;
+        const height = tm.areaHeight() >> tm.scale;
+        return tm.areaWidth() >> tm.scale;
+    }
+
+    /**
+     * Returns the number of rows in the currently loaded tilemap.
+     */
+    //% block="tilemap rows"
+    //% group="Tilemap" weight=10 blockGap=8
+    export function tilemapRows(): number {
+        const tm = game.currentScene().tileMap;
+
+        if (!tm) return 0;
+        return tm.areaHeight() >> tm.scale;
+    }
+
+    /**
+     * Gets the tilemap column of a tile location
+     */
+    //% block="$location column"
+    //% location.shadow=variables_get
+    //% group="Tilemap" weight=50 blockGap=8
+    export function locationColumn(location: tiles.Location): number {
+        return screenCoordinateToTile(location.x);
+    }
+
+    /**
+     * Gets the tilemap row of a tile location
+     */
+    //% block="$location row"
+    //% location.shadow=variables_get
+    //% group="Tilemap" weight=40 blockGap=8
+    export function locationRow(location: tiles.Location): number {
+        return screenCoordinateToTile(location.y);
+    }
+
+    /**
+     * Converts a screen coordinate to a tilemap location.
+     */
+    //% block="screen coordinate $value to tile location"
+    //% group="Tilemap" weight=30 blockGap=8
+    export function screenCoordinateToTile(value: number) {
+        const tm = game.currentScene().tileMap;
+        if (!tm) return value >> 4;
+        return value >> tm.scale;
+    }
+
+    /**
+     * Converts a tilemap location to a screen coordinate.
+     */
+    //% block="tile coordinate $value to screen coordinate"
+    //% group="Tilemap" weight=20 blockGap=8
+    export function tileCoordinateToScreen(value: number) {
+        const tm = game.currentScene().tileMap;
+        if (!tm) return value << 4;
+        return value << tm.scale;
+    }
+
+    /**
+     * Converts a tilemap coordinate to a screen coordinate and
+     * adds half a tile width.
+     */
+    //% block="centered tile coordinate $value to screen coordinate"
+    //% group="Tilemap" weight=10 blockGap=8
+    export function centeredTileCoordinateToScreen(value: number) {
+        const tm = game.currentScene().tileMap;
+        if (!tm) return (value << 4) + 8;
+        return (value << tm.scale) + (1 << (tm.scale - 1));
     }
 }
