@@ -211,7 +211,7 @@ namespace tilemap {
     /**
      * Starting from a tile location, get the neighboring tile location in the given direction.
      */
-    //% block="tile location in $direction from location $location"
+    //% block="tile location $direction from location $location"
     //% direction.shadow=direction_editor
     //% location.shadow=variables_get
     //% group="Tiles" weight=40 blockGap=8
