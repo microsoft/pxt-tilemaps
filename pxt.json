@@ -5,7 +5,6 @@
     },
     "description": "An extension for handling multiple tilemaps and extra tilemap blocks.",
     "files": [
-        "main.ts",
         "README.md",
         "tilemap.ts",
         "overworld.ts",
