@@ -123,10 +123,10 @@ namespace overworld {
     /**
      * Runs code when an overworld tilemap is loaded.
      */
-    //% block="on tilemap loaded $map"
+    //% block="on tilemap loaded $tilemap"
     //% draggableParameters="reporter"
     //% group="Creation" weight=20 blockGap=8
-    export function onMapLoaded(cb: (map: WorldMap) => void) {
+    export function onMapLoaded(cb: (tilemap: WorldMap) => void) {
         control.onEvent(OVERWORLD_MAP_ID, MAP_LOADED_EVENT, function () {
             cb(getLoadedMap());
         });
@@ -135,10 +135,10 @@ namespace overworld {
     /**
      * Runs code when an overworld tilemap is unloaded.
      */
-    //% block="on tilemap unloaded $map"
+    //% block="on tilemap unloaded $tilemap"
     //% draggableParameters="reporter"
     //% group="Creation" weight=10 blockGap=8
-    export function onMapUnloaded(cb: (map: WorldMap) => void) {
+    export function onMapUnloaded(cb: (tilemap: WorldMap) => void) {
         OverWorldState.getInstance().addUnloadListener(cb);
     }
 
@@ -189,6 +189,7 @@ namespace overworld {
      */
     //% block="get tilemap connected to $sourceTilemap by ID $connectionID"
     //% sourceTilemap.shadow=variables_get
+    //% sourceTilemap.defl=sourceTilemap
     //% group="Connections" weight=10 blockGap=8
     export function getConnectedMap(sourceTilemap: WorldMap, connectionID: number): WorldMap {
         if (!sourceTilemap) return null;
