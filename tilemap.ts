@@ -214,6 +214,7 @@ namespace tilemap {
     //% block="tile location $direction from location $location"
     //% direction.shadow=direction_editor
     //% location.shadow=variables_get
+    //% location.defl=location
     //% group="Tiles" weight=40 blockGap=8
     export function locationInDirection(location: tiles.Location, direction: number) {
         return tiles.getTileLocation(
@@ -322,6 +323,7 @@ namespace tilemap {
      */
     //% block="$location column"
     //% location.shadow=variables_get
+    //% location.defl=location
     //% group="Tilemap" weight=50 blockGap=8
     export function locationColumn(location: tiles.Location): number {
         return screenCoordinateToTile(location.x);
@@ -332,6 +334,7 @@ namespace tilemap {
      */
     //% block="$location row"
     //% location.shadow=variables_get
+    //% location.defl=location
     //% group="Tilemap" weight=40 blockGap=8
     export function locationRow(location: tiles.Location): number {
         return screenCoordinateToTile(location.y);
