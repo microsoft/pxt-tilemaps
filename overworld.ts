@@ -1,5 +1,5 @@
 //% color=#b8849b icon="\uf0ac"
-//% groups='["Creation", "Connections", "World Grid"]'
+//% groups='["Creation", "Connections", "Overworld Grid"]'
 namespace overworld {
     export const OVERWORLD_MAP_ID = 7686;
     export const MAP_LOADED_EVENT = 7687;
@@ -68,11 +68,15 @@ namespace overworld {
         }
     }
 
+    //
+    // Creation
+    //
+
     /**
-     * Creates an overworld tilemap.
+     * Creates a tilemap that can be connected to other tilemaps through the overworld.
      */
     //% blockId=create_overworld_map
-    //% block="create map $tilemap"
+    //% block="create tilemap $tilemap"
     //% tilemap.fieldEditor="tilemap"
     //% tilemap.fieldOptions.decompileArgumentAsString="true"
     //% tilemap.fieldOptions.filter="tile"
@@ -82,9 +86,9 @@ namespace overworld {
     }
 
     /**
-     * Loads an overworld tilemap.
+     * Sets the current overworld tilemap.
      */
-    //% block="load map $map"
+    //% block="load tilemap $map"
     //% map.shadow=create_overworld_map
     //% group="Creation" weight=40 blockGap=8
     export function loadMap(map: WorldMap) {
@@ -108,18 +112,18 @@ namespace overworld {
     }
 
     /**
-     * Returns the loaded overworld map.
+     * Returns the loaded overworld tilemap.
      */
-    //% block="loaded map"
+    //% block="loaded tilemap"
     //% group="Creation" weight=30
     export function getLoadedMap(): WorldMap {
         return OverWorldState.getInstance().loadedMap
     }
 
     /**
-     * Executes a piece of code when an overworld tilemap is loaded.
+     * Runs code when an overworld tilemap is loaded.
      */
-    //% block="on map loaded $map"
+    //% block="on tilemap loaded $map"
     //% draggableParameters="reporter"
     //% group="Creation" weight=20 blockGap=8
     export function onMapLoaded(cb: (map: WorldMap) => void) {
@@ -129,24 +133,18 @@ namespace overworld {
     }
 
     /**
-     * Executes a piece of code when an overworld tilemap is unloaded.
+     * Runs code when an overworld tilemap is unloaded.
      */
-    //% block="on map unloaded $map"
+    //% block="on tilemap unloaded $map"
     //% draggableParameters="reporter"
     //% group="Creation" weight=10 blockGap=8
     export function onMapUnloaded(cb: (map: WorldMap) => void) {
         OverWorldState.getInstance().addUnloadListener(cb);
     }
 
-    /**
-     * Loads the overworld tilemap connected to the loaded map by the
-     * given id.
-     */
-    //% block="load map connected by ID $connectionID"
-    //% group="Connections" weight=30 blockGap=8
-    export function loadConnectedMap(connectionID: number) {
-        loadMap(getConnectedMap(getLoadedMap(), connectionID));
-    }
+    //
+    // Connections
+    //
 
     function connectMapByIdCore(sourceMap: WorldMap, destination: WorldMap, connectionID: number) {
         if (!sourceMap) return;
@@ -161,51 +159,67 @@ namespace overworld {
     }
 
     /**
-     * Connects the source map to a destination map by the given ID.
+     * Connects the source tilemap to a destination tilemap with a connection ID. 
+     * Connections are stored on the source tilemap and IDs can be reused between
+     * different source tilemaps.
      */
-    //% block="connect $sourceMap to $destination with ID $connectionID"
-    //% sourceMap.shadow=variables_get
-    //% sourceMap.defl=sourceMap
+    //% block="connect $sourceTilemap to $destination with ID $connectionID"
+    //% sourceTilemap.shadow=variables_get
+    //% sourceTilemap.defl=sourceTilemap
     //% destination.shadow=create_overworld_map
     //% group="Connections" weight=20 blockGap=8
-    export function connectMapById(sourceMap: WorldMap, destination: WorldMap, connectionID: number) {
-        connectMapByIdCore(sourceMap, destination, connectionID);
-        connectMapByIdCore(destination, sourceMap, connectionID);
+    export function connectMapById(sourceTilemap: WorldMap, destination: WorldMap, connectionID: number) {
+        connectMapByIdCore(sourceTilemap, destination, connectionID);
+        connectMapByIdCore(destination, sourceTilemap, connectionID);
+    }
+
+    /**
+     * Loads the overworld tilemap connected to the loaded source tilemap by the
+     * given connection ID.
+     */
+    //% block="load destination tilemap from connection ID $connectionID"
+    //% group="Connections" weight=30 blockGap=8
+    export function loadConnectedMap(connectionID: number) {
+        loadMap(getConnectedMap(getLoadedMap(), connectionID));
     }
 
 
     /**
-     * Gets the destination map connected to the source map by the given ID.
+     * Gets the destination tilemap connected to the source tilemap by the given connection ID.
      */
-    //% block="get map connected to $source by ID $connectionID"
-    //% source.shadow=create_overworld_map
+    //% block="get tilemap connected to $sourceTilemap by ID $connectionID"
+    //% sourceTilemap.shadow=variables_get
     //% group="Connections" weight=10 blockGap=8
-    export function getConnectedMap(source: WorldMap, connectionID: number): WorldMap {
-        if (!source) return null;
+    export function getConnectedMap(sourceTilemap: WorldMap, connectionID: number): WorldMap {
+        if (!sourceTilemap) return null;
 
-        for (const connection of source.connections) {
+        for (const connection of sourceTilemap.connections) {
             if (connection.id === connectionID) return connection.map;
         }
 
         return null;
     }
 
+    //
+    // Overworld Grid
+    //
+
     /**
-     * Set the map at the specified column and row in the overworld grid.
+     * Assign the tilemap to the specified column and row in the overworld grid.
      */
-    //% block="set map at world col $worldColumn row $worldRow to $map"
+    //% block="set tilemap at overworld col $worldColumn row $worldRow to $map"
     //% map.shadow=create_overworld_map
-    //% group="World Grid" weight=60 blockGap=8
+    //% group="Overworld Grid" weight=60 blockGap=8
     export function setWorldLocationToMap(worldColumn: number, worldRow: number, map: WorldMap) {
         OverWorldState.getInstance().setMapAtLocation(worldColumn, worldRow, map);
     }
 
     /**
-     * Loads an overworld tilemap at a given column and row in the
+     * Loads the tilemap at a given column and row from the
      * overworld grid.
      */
-    //% block="load map at world col $worldColumn row $worldRow"
-    //% group="World Grid" weight=50 blockGap=8
+    //% block="load tilemap at overworld col $worldColumn row $worldRow"
+    //% group="Overworld Grid" weight=50 blockGap=8
     export function loadMapAt(worldColumn: number, worldRow: number) {
         loadMap(getMapAtWorldLocation(worldColumn, worldRow));
         OverWorldState.getInstance().loadedColumn = worldColumn;
@@ -213,12 +227,21 @@ namespace overworld {
     }
 
     /**
-     * Loads the overworld tilemap adjacent to the loaded map in the
-     * given direction.
+     * Get the tilemap at the given column and row from the overworld grid.
      */
-    //% block="load map in direction $direction"
+    //% block="get tilemap at overworld col $worldColumn row $worldRow"
+    //% group="Overworld Grid" weight=30 blockGap=8
+    export function getMapAtWorldLocation(worldColumn: number, worldRow: number): WorldMap {
+        return OverWorldState.getInstance().getMapAtLocation(worldColumn, worldRow);
+    }
+
+    /**
+     * Loads the tilemap adjacent to the loaded tilemap in the
+     * given direction from the overworld.
+     */
+    //% block="load tilemap in direction $direction"
     //% direction.shadow=direction_editor
-    //% group="World Grid" weight=40
+    //% group="Overworld Grid" weight=40
     export function loadMapInDirection(direction: number) {
         loadMapAt(
             tilemap.columnInDirection(loadedWorldColumn(), direction),
@@ -227,28 +250,19 @@ namespace overworld {
     }
 
     /**
-     * Get the map at the specified column and row in the overworld grid.
+     * Get the column of the loaded tilemap in the overworld.
      */
-    //% block="get map at world col $worldColumn row $worldRow"
-    //% group="World Grid" weight=30 blockGap=8
-    export function getMapAtWorldLocation(worldColumn: number, worldRow: number): WorldMap {
-        return OverWorldState.getInstance().getMapAtLocation(worldColumn, worldRow);
-    }
-
-    /**
-     * Get the world column of the loaded overworld map.
-     */
-    //% block="loaded world column"
-    //% group="World Grid" weight=20 blockGap=8
+    //% block="loaded overworld column"
+    //% group="Overworld Grid" weight=20 blockGap=8
     export function loadedWorldColumn() {
         return OverWorldState.getInstance().loadedColumn;
     }
 
     /**
-     * Get the world row of the loaded overworld map.
+     * Get the row of the loaded tilemap in the overworld.
      */
-    //% block="loaded world row"
-    //% group="World Grid" weight=10 blockGap=8
+    //% block="loaded overworld row"
+    //% group="Overworld Grid" weight=10 blockGap=8
     export function loadedWorldRow() {
         return OverWorldState.getInstance().loadedRow;
     }
