@@ -94,7 +94,7 @@ namespace overworld {
     export function loadMap(map: WorldMap) {
         const loaded = getLoadedMap();
 
-        tilemap.destorySpritesOfKind(SpriteKind.TileSprite)
+        tilemap.destorySpritesOfKind(SpriteKind._TileSprite)
 
         if (loaded) {
             OverWorldState.callUnloadListeners();

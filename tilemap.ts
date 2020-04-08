@@ -3,8 +3,7 @@
 // - replace "cover" with create cover sprite
 
 namespace SpriteKind {
-    //% isKind
-    export const TileSprite = SpriteKind.create()
+    export const _TileSprite = SpriteKind.create()
 }
 
 //% color=#84b89f icon="\uf279"
@@ -15,7 +14,7 @@ namespace tilemap {
     //
     /**
      * Cover the tile at a given location with a sprite of a tile image.
-     * This sprite is of kind "TileSprite" and will be automatically removed when
+     * This sprite is of kind "_TileSprite" and will be automatically removed when
      * loading to a new tilemap. Further, it has the "ghost" property enabled and
      * will not collide with other sprites.
      */
@@ -26,7 +25,7 @@ namespace tilemap {
     //% location.shadow=mapgettile
     //% blockSetVariable=myTileSprite
     export function createTileSprite(location: tiles.Location, cover: Image): Sprite {
-        const coverSprite = sprites.create(cover, SpriteKind.TileSprite);
+        const coverSprite = sprites.create(cover, SpriteKind._TileSprite);
         coverSprite.setFlag(SpriteFlag.Ghost, true);
         coverSprite.z = -1;
         tiles.placeOnTile(coverSprite, location);
@@ -35,7 +34,7 @@ namespace tilemap {
 
     /**
      * Cover the tile at a given location with a sprite of a tile image.
-     * This sprite is of kind "TileSprite" and will be automatically removed when
+     * This sprite is of kind "_TileSprite" and will be automatically removed when
      * loading to a new tilemap. Further, it has the "ghost" property enabled and
      * will not collide with other sprites.
      */
@@ -50,7 +49,7 @@ namespace tilemap {
 
     /**
      * Cover all tiles of a given kind with a sprite of a tile image.
-     * These sprites are of kind "TileSprite" and will be automatically removed when
+     * These sprites are of kind "_TileSprite" and will be automatically removed when
      * loading to a new tilemap. Further, they have the "ghost" property enabled and
      * will not collide with other sprites.
      */
