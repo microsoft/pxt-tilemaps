@@ -7,7 +7,7 @@ namespace SpriteKind {
 }
 
 //% color=#84b89f icon="\uf279"
-//% groups='["Sprites", "Tiles", "Tilemap", "Cover", "Camera"]'
+//% groups='["Sprites", "Cover", "Tiles", "Location", "Camera"]'
 namespace tilemap {
     //
     // Cover
@@ -53,17 +53,6 @@ namespace tilemap {
     //
     // Sprites
     //
-
-    /**
-     * Gets the tile location of a sprite.
-     */
-    //% block="location of $s"
-    //% s.shadow=variables_get
-    //% s.defl=sprite
-    //% group="Sprites" weight=90
-    export function locationOfSprite(s: Sprite): tiles.Location {
-        return tiles.getTileLocation(screenCoordinateToTile(s.x), screenCoordinateToTile(s.y));
-    }
 
     /**
      * On each tile of a given kind, create a sprite of a given SpriteKind. 
@@ -268,14 +257,25 @@ namespace tilemap {
     }
 
     //
-    // Tilemap
+    // Location
     //
+
+    /**
+     * Gets the tile location of a sprite.
+     */
+    //% block="location of $s"
+    //% s.shadow=variables_get
+    //% s.defl=sprite
+    //% group="Sprites" weight=90
+    export function locationOfSprite(s: Sprite): tiles.Location {
+        return tiles.getTileLocation(screenCoordinateToTile(s.x), screenCoordinateToTile(s.y));
+    }
 
     /**
      * Returns the width of tiles in the loaded tilemap.
      */
     //% block="tile width"
-    //% group="Tilemap" weight=15
+    //% group="Location" weight=15
     export function tileWidth(): number {
         const tm = game.currentScene().tileMap;
 
@@ -287,7 +287,7 @@ namespace tilemap {
      * Returns the number of columns in the currently loaded tilemap.
      */
     //% block="tilemap columns"
-    //% group="Tilemap" weight=16 blockGap=8
+    //% group="Location" weight=16 blockGap=8
     export function tilemapColumns(): number {
         const tm = game.currentScene().tileMap;
 
@@ -300,7 +300,7 @@ namespace tilemap {
      * Returns the number of rows in the currently loaded tilemap.
      */
     //% block="tilemap rows"
-    //% group="Tilemap" weight=17 blockGap=8
+    //% group="Location" weight=17 blockGap=8
     export function tilemapRows(): number {
         const tm = game.currentScene().tileMap;
 
@@ -314,7 +314,7 @@ namespace tilemap {
     //% block="$location column"
     //% location.shadow=variables_get
     //% location.defl=location
-    //% group="Tilemap" weight=50 blockGap=8
+    //% group="Location" weight=50 blockGap=8
     export function locationColumn(location: tiles.Location): number {
         return screenCoordinateToTile(location.x);
     }
@@ -325,7 +325,7 @@ namespace tilemap {
     //% block="$location row"
     //% location.shadow=variables_get
     //% location.defl=location
-    //% group="Tilemap" weight=40 blockGap=8
+    //% group="Location" weight=40 blockGap=8
     export function locationRow(location: tiles.Location): number {
         return screenCoordinateToTile(location.y);
     }
@@ -336,7 +336,7 @@ namespace tilemap {
     export function screenCoordinateToTile(value: number) {
         // NOTE: This block has been disabled because it was deemed too confusing
         //% block="screen coordinate $value to tile location"
-        //% group="Tilemap" weight=30 blockGap=8
+        //% group="Location" weight=30 blockGap=8
         const tm = game.currentScene().tileMap;
         if (!tm) return value >> 4;
         return value >> tm.scale;
@@ -353,7 +353,7 @@ namespace tilemap {
     //% block="$sprite $rowCol"
     //% sprite.shadow=variables_get
     //% sprite.defl=mySprite
-    //% group="Tilemap" weight=30 blockGap=8
+    //% group="Location" weight=30 blockGap=8
     export function spriteRowCol(sprite: Sprite, rowCol: RowCol) {
         return screenCoordinateToTile(rowCol === RowCol.row ? sprite.x : sprite.y)
     }
@@ -373,7 +373,7 @@ namespace tilemap {
     //% block="tile $location $xy"
     //% location.shadow=variables_get
     //% location.defl=location
-    //% group="Tilemap" weight=30 blockGap=8
+    //% group="Location" weight=30 blockGap=8
     export function locationXY(location: tiles.Location, xy: XY) {
         let n: number;
         switch (xy) {
@@ -407,7 +407,7 @@ namespace tilemap {
     export function tileCoordinateToScreen(value: number) {
         // NOTE: This block has been disabled because it was deemed too confusing
         //% block="tile coordinate $value to screen coordinate"
-        //% group="Tilemap" weight=20 blockGap=8
+        //% group="Location" weight=20 blockGap=8
         const tm = game.currentScene().tileMap;
         if (!tm) return value << 4;
         return value << tm.scale;
@@ -420,7 +420,7 @@ namespace tilemap {
     export function centeredTileCoordinateToScreen(value: number) {
         // NOTE: This block has been disabled because it was deemed too confusing
         //% block="centered tile coordinate $value to screen coordinate"
-        //% group="Tilemap" weight=10 blockGap=8
+        //% group="Location" weight=10 blockGap=8
         const tm = game.currentScene().tileMap;
         if (!tm) return (value << 4) + 8;
         return (value << tm.scale) + (1 << (tm.scale - 1));
