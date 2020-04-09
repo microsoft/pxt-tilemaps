@@ -378,22 +378,22 @@ namespace tilemap {
         let n: number;
         switch (xy) {
             case XY.x:
-                n = location.row + 0.5
+                n = location.x + 0.5
                 break;
             case XY.y:
-                n = location.col + 0.5
+                n = location.y + 0.5
                 break;
             case XY.left:
-                n = location.row
+                n = location.x
                 break;
             case XY.right:
-                n = location.row + 1.0
+                n = location.x + 1.0
                 break;
             case XY.top:
-                n = location.row
+                n = location.y
                 break;
             case XY.bottom:
-                n = location.row + 1.0
+                n = location.y + 1.0
                 break;
             default:
                 break;
