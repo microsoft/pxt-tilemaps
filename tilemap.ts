@@ -7,10 +7,10 @@ namespace SpriteKind {
 }
 
 //% color=#84b89f icon="\uf279"
-//% groups='["Sprites", "Tiles", "Tilemap", "Camera"]'
+//% groups='["Sprites", "Tiles", "Tilemap", "Cover", "Camera"]'
 namespace tilemap {
     //
-    // Sprites
+    // Cover
     //
     /**
      * Cover the tile at a given location with a sprite of a tile image.
@@ -18,13 +18,15 @@ namespace tilemap {
      * loading to a new tilemap. Further, it has the "ghost" property enabled and
      * will not collide with other sprites.
      */
-    //% block="sprite from tile $cover at $location"
-    //% cover.shadow=tileset_tile_picker
-    //% cover.decompileIndirectFixedInstances=true
-    //% group="Sprites" weight=50 blockGap=8
-    //% location.shadow=mapgettile
-    //% blockSetVariable=myTileSprite
     export function createTileSprite(location: tiles.Location, cover: Image): Sprite {
+        // NOTE: This block has been disabled because it was deemed too confusing
+        //% block="sprite from tile $cover at $location"
+        //% cover.shadow=tileset_tile_picker
+        //% cover.decompileIndirectFixedInstances=true
+        //% group="Cover" weight=50 blockGap=8
+        //% location.shadow=mapgettile
+        //% blockSetVariable=myTileSprite
+
         const coverSprite = sprites.create(cover, SpriteKind._TileSprite);
         coverSprite.setFlag(SpriteFlag.Ghost, true);
         coverSprite.z = -1;
@@ -33,35 +35,24 @@ namespace tilemap {
     }
 
     /**
-     * Cover the tile at a given location with a sprite of a tile image.
-     * This sprite is of kind "_TileSprite" and will be automatically removed when
-     * loading to a new tilemap. Further, it has the "ghost" property enabled and
-     * will not collide with other sprites.
-     */
-    //% block="create sprite from tile $cover at $location"
-    //% cover.shadow=tileset_tile_picker
-    //% cover.decompileIndirectFixedInstances=true
-    //% group="Sprites" weight=50 blockGap=8
-    //% location.shadow=mapgettile
-    export function createTileSpriteStmt(location: tiles.Location, cover: Image) {
-        createTileSprite(location, cover);
-    }
-
-    /**
      * Cover all tiles of a given kind with a sprite of a tile image.
      * These sprites are of kind "_TileSprite" and will be automatically removed when
      * loading to a new tilemap. Further, they have the "ghost" property enabled and
      * will not collide with other sprites.
      */
-    //% block="on each $tileKind tile create sprite from tile $cover"
+    //% block="cover all $tileKind tiles with $cover"
     //% tileKind.shadow=tileset_tile_picker
     //% tileKind.decompileIndirectFixedInstances=true
     //% cover.shadow=tileset_tile_picker
     //% cover.decompileIndirectFixedInstances=true
-    //% group="Sprites" weight=40 blockGap=8
+    //% group="Cover" weight=40 blockGap=8
     export function coverAllTiles(tileKind: Image, cover: Image) {
         forEachTileOfKind(tileKind, loc => createTileSprite(loc, cover));
     }
+
+    //
+    // Sprites
+    //
 
     /**
      * Gets the tile location of a sprite.
@@ -157,7 +148,7 @@ namespace tilemap {
      * tilemap.
      */
     export function forEachTileOfKind(tileKind: Image, cb: (location: tiles.Location) => void) {
-        // TODO: handlerStatement does not work right
+        // TODO: handlerStatement does not work right due to a bug in pxt-core
         // block="for each $tileKind tile at $location"
         // draggableParameters="reporter" handlerStatement
         // tileKind.shadow=tileset_tile_picker
@@ -177,7 +168,7 @@ namespace tilemap {
      * Executes a piece of code for every tile in the loaded tilemap
      */
     export function forEachTileOfMap(cb: (location: tiles.Location, tile: Image) => void) {
-        // TODO: handlerStatement does not work right
+        // TODO: handlerStatement does not work right due to a bug in pxt-core
         // block="for each tile at $location with image $tile"
         // draggableParameters="reporter" handlerStatement
         // group="Tiles" weight=60
@@ -210,7 +201,7 @@ namespace tilemap {
     /**
      * Starting from a tile location, get the neighboring tile location in the given direction.
      */
-    //% block="tile location $direction from location $location"
+    //% block="$direction tile from $location"
     //% direction.shadow=direction_editor
     //% location.shadow=variables_get
     //% location.defl=location
@@ -245,7 +236,7 @@ namespace tilemap {
      * and going clockwise.
      */
     export function forEachDirection(cb: (direction: CollisionDirection) => void) {
-        // TODO: handlerStatement does not work right
+        // TODO: handlerStatement does not work right due to a bug in pxt-core
         // block="for each direction $direction"
         // draggableParameters="reporter" handlerStatement
         // group="Tiles" weight=20
@@ -284,7 +275,7 @@ namespace tilemap {
      * Returns the width of tiles in the loaded tilemap.
      */
     //% block="tile width"
-    //% group="Tilemap" weight=30
+    //% group="Tilemap" weight=15
     export function tileWidth(): number {
         const tm = game.currentScene().tileMap;
 
@@ -296,7 +287,7 @@ namespace tilemap {
      * Returns the number of columns in the currently loaded tilemap.
      */
     //% block="tilemap columns"
-    //% group="Tilemap" weight=20 blockGap=8
+    //% group="Tilemap" weight=16 blockGap=8
     export function tilemapColumns(): number {
         const tm = game.currentScene().tileMap;
 
@@ -309,7 +300,7 @@ namespace tilemap {
      * Returns the number of rows in the currently loaded tilemap.
      */
     //% block="tilemap rows"
-    //% group="Tilemap" weight=10 blockGap=8
+    //% group="Tilemap" weight=17 blockGap=8
     export function tilemapRows(): number {
         const tm = game.currentScene().tileMap;
 
@@ -342,20 +333,81 @@ namespace tilemap {
     /**
      * Converts a screen coordinate to a tilemap location.
      */
-    //% block="screen coordinate $value to tile location"
-    //% group="Tilemap" weight=30 blockGap=8
     export function screenCoordinateToTile(value: number) {
+        // NOTE: This block has been disabled because it was deemed too confusing
+        //% block="screen coordinate $value to tile location"
+        //% group="Tilemap" weight=30 blockGap=8
         const tm = game.currentScene().tileMap;
         if (!tm) return value >> 4;
         return value >> tm.scale;
     }
 
+    export enum RowCol {
+        row,
+        col
+    }
+
+    /**
+     * Gets a sprite's row or column.
+     */
+    //% block="$sprite $rowCol"
+    //% sprite.shadow=variables_get
+    //% sprite.defl=mySprite
+    //% group="Tilemap" weight=30 blockGap=8
+    export function spriteRowCol(sprite: Sprite, rowCol: RowCol) {
+        return screenCoordinateToTile(rowCol === RowCol.row ? sprite.x : sprite.y)
+    }
+
+    export enum XY {
+        x,
+        y,
+        top,
+        left,
+        right,
+        bottom
+    }
+
+    /**
+     * Get's the world x or y position from a tile row column location.
+     */
+    //% block="tile $location $xy"
+    //% location.shadow=variables_get
+    //% location.defl=location
+    //% group="Tilemap" weight=30 blockGap=8
+    export function locationXY(location: tiles.Location, xy: XY) {
+        let n: number;
+        switch (xy) {
+            case XY.x:
+                n = location.row + 0.5
+                break;
+            case XY.y:
+                n = location.col + 0.5
+                break;
+            case XY.left:
+                n = location.row
+                break;
+            case XY.right:
+                n = location.row + 1.0
+                break;
+            case XY.top:
+                n = location.row
+                break;
+            case XY.bottom:
+                n = location.row + 1.0
+                break;
+            default:
+                break;
+        }
+        return tileCoordinateToScreen(n)
+    }
+
     /**
      * Converts a tilemap location to a screen coordinate.
      */
-    //% block="tile coordinate $value to screen coordinate"
-    //% group="Tilemap" weight=20 blockGap=8
     export function tileCoordinateToScreen(value: number) {
+        // NOTE: This block has been disabled because it was deemed too confusing
+        //% block="tile coordinate $value to screen coordinate"
+        //% group="Tilemap" weight=20 blockGap=8
         const tm = game.currentScene().tileMap;
         if (!tm) return value << 4;
         return value << tm.scale;
@@ -365,9 +417,10 @@ namespace tilemap {
      * Converts a tilemap coordinate to a screen coordinate and
      * adds half a tile width.
      */
-    //% block="centered tile coordinate $value to screen coordinate"
-    //% group="Tilemap" weight=10 blockGap=8
     export function centeredTileCoordinateToScreen(value: number) {
+        // NOTE: This block has been disabled because it was deemed too confusing
+        //% block="centered tile coordinate $value to screen coordinate"
+        //% group="Tilemap" weight=10 blockGap=8
         const tm = game.currentScene().tileMap;
         if (!tm) return (value << 4) + 8;
         return (value << tm.scale) + (1 << (tm.scale - 1));

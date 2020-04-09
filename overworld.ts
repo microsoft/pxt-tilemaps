@@ -203,15 +203,16 @@ namespace overworld {
 
     //
     // Overworld Grid
+    // NOTE: All of these blocks have been disabled because they were deemed too confusing
     //
 
     /**
      * Assign the tilemap to the specified column and row in the overworld grid.
      */
-    //% block="set tilemap at overworld col $worldColumn row $worldRow to $map"
-    //% map.shadow=create_overworld_map
-    //% group="Overworld Grid" weight=60 blockGap=8
     export function setWorldLocationToMap(worldColumn: number, worldRow: number, map: WorldMap) {
+        //% block="set tilemap at overworld col $worldColumn row $worldRow to $map"
+        //% map.shadow=create_overworld_map
+        //% group="Overworld Grid" weight=60 blockGap=8
         OverWorldState.getInstance().setMapAtLocation(worldColumn, worldRow, map);
     }
 
@@ -219,9 +220,9 @@ namespace overworld {
      * Loads the tilemap at a given column and row from the
      * overworld grid.
      */
-    //% block="load tilemap at overworld col $worldColumn row $worldRow"
-    //% group="Overworld Grid" weight=50 blockGap=8
     export function loadMapAt(worldColumn: number, worldRow: number) {
+        //% block="load tilemap at overworld col $worldColumn row $worldRow"
+        //% group="Overworld Grid" weight=50 blockGap=8
         loadMap(getMapAtWorldLocation(worldColumn, worldRow));
         OverWorldState.getInstance().loadedColumn = worldColumn;
         OverWorldState.getInstance().loadedRow = worldRow;
@@ -230,9 +231,9 @@ namespace overworld {
     /**
      * Get the tilemap at the given column and row from the overworld grid.
      */
-    //% block="get tilemap at overworld col $worldColumn row $worldRow"
-    //% group="Overworld Grid" weight=30 blockGap=8
     export function getMapAtWorldLocation(worldColumn: number, worldRow: number): WorldMap {
+        //% block="get tilemap at overworld col $worldColumn row $worldRow"
+        //% group="Overworld Grid" weight=30 blockGap=8
         return OverWorldState.getInstance().getMapAtLocation(worldColumn, worldRow);
     }
 
@@ -240,10 +241,10 @@ namespace overworld {
      * Loads the tilemap adjacent to the loaded tilemap in the
      * given direction from the overworld.
      */
-    //% block="load tilemap in direction $direction"
-    //% direction.shadow=direction_editor
-    //% group="Overworld Grid" weight=40
     export function loadMapInDirection(direction: number) {
+        //% block="load tilemap in direction $direction"
+        //% direction.shadow=direction_editor
+        //% group="Overworld Grid" weight=40
         loadMapAt(
             tilemap.columnInDirection(loadedWorldColumn(), direction),
             tilemap.rowInDirection(loadedWorldRow(), direction)
@@ -253,18 +254,18 @@ namespace overworld {
     /**
      * Get the column of the loaded tilemap in the overworld.
      */
-    //% block="loaded overworld column"
-    //% group="Overworld Grid" weight=20 blockGap=8
     export function loadedWorldColumn() {
+        //% block="loaded overworld column"
+        //% group="Overworld Grid" weight=20 blockGap=8
         return OverWorldState.getInstance().loadedColumn;
     }
 
     /**
      * Get the row of the loaded tilemap in the overworld.
      */
-    //% block="loaded overworld row"
-    //% group="Overworld Grid" weight=10 blockGap=8
     export function loadedWorldRow() {
+        //% block="loaded overworld row"
+        //% group="Overworld Grid" weight=10 blockGap=8
         return OverWorldState.getInstance().loadedRow;
     }
 } 
