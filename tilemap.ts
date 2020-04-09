@@ -1,7 +1,3 @@
-// TODO:
-// - different categories in Tilemap
-// - replace "cover" with create cover sprite
-
 namespace SpriteKind {
     export const _TileSprite = SpriteKind.create()
 }
@@ -12,6 +8,14 @@ namespace tilemap {
     //
     // Cover
     //
+
+    /**
+     * Cover the tile at a given location with a sprite of a tile image.
+     * This sprite is of kind "_TileSprite" and will be automatically removed when
+     * loading to a new tilemap. Further, it has the "ghost" property enabled and
+     * will not collide with other sprites.
+     */
+
     /**
      * Cover the tile at a given location with a sprite of a tile image.
      * This sprite is of kind "_TileSprite" and will be automatically removed when
@@ -188,21 +192,6 @@ namespace tilemap {
     }
 
     /**
-     * Starting from a tile location, get the neighboring tile location in the given direction.
-     */
-    //% block="$direction tile from $location"
-    //% direction.shadow=direction_editor
-    //% location.shadow=variables_get
-    //% location.defl=location
-    //% group="Tiles" weight=40 blockGap=8
-    export function locationInDirection(location: tiles.Location, direction: number) {
-        return tiles.getTileLocation(
-            columnInDirection(locationColumn(location), direction),
-            rowInDirection(locationRow(location), direction)
-        );
-    }
-
-    /**
      * Gets the neighboring column in the given direction.
      */
     export function columnInDirection(column: number, direction: number) {
@@ -235,13 +224,6 @@ namespace tilemap {
         cb(CollisionDirection.Left);
     }
 
-    //% blockId=direction_editor shim=TD_ID
-    //% block="$direction"
-    //% group="Tiles" weight=10
-    export function _directionEditor(direction: CollisionDirection): CollisionDirection {
-        return direction;
-    }
-
     //
     // Camera
     //
@@ -265,10 +247,114 @@ namespace tilemap {
      */
     //% block="location of $s"
     //% s.shadow=variables_get
-    //% s.defl=sprite
-    //% group="Sprites" weight=90
+    //% s.defl=mySprite
+    //% group="Location" weight=90 blockGap=8
     export function locationOfSprite(s: Sprite): tiles.Location {
         return tiles.getTileLocation(screenCoordinateToTile(s.x), screenCoordinateToTile(s.y));
+    }
+
+    export enum RowCol {
+        column,
+        row,
+    }
+
+    /**
+     * Gets a sprite's row or column.
+     */
+    export function spriteRowCol(sprite: Sprite, rowCol: RowCol) {
+        // NOTE: This block has been disabled because it was deemed redundant
+        //% block="$sprite $rowCol"
+        //% sprite.shadow=variables_get
+        //% sprite.defl=mySprite
+        //% group="Location" weight=80
+        return screenCoordinateToTile(rowCol === RowCol.row ? sprite.x : sprite.y)
+    }
+
+    /**
+     * Gets the tilemap column of a tile location
+     */
+    export function locationColumn(location: tiles.Location): number {
+        // NOTE: This block has been disabled because it was deemed too confusing
+        //% block="$location column"
+        //% location.shadow=variables_get
+        //% location.defl=location
+        //% group="Location" weight=50 blockGap=8
+        return screenCoordinateToTile(location.x);
+    }
+
+    /**
+     * Gets the tilemap row of a tile location
+     */
+    export function locationRow(location: tiles.Location): number {
+        // NOTE: This block has been disabled because it was deemed too confusing
+        //% block="$location row"
+        //% location.shadow=variables_get
+        //% location.defl=location
+        //% group="Location" weight=50 blockGap=8
+        return screenCoordinateToTile(location.y);
+    }
+
+    export enum XY {
+        column,
+        row,
+        x,
+        y,
+        top,
+        left,
+        right,
+        bottom,
+    }
+
+    /**
+     * Get's the world x or y position from a tile row column location.
+     */
+    //% block="$location $xy"
+    //% location.shadow=variables_get
+    //% location.defl=location
+    //% group="Location" weight=45 blockGap=8
+    export function locationXY(location: tiles.Location, xy: XY) {
+        if (xy === XY.row)
+            return screenCoordinateToTile(location.y)
+        else if (xy === XY.column)
+            return screenCoordinateToTile(location.x)
+
+        switch (xy) {
+            case XY.x:
+                return location.x
+            case XY.y:
+                return location.y
+            case XY.left:
+                return location.x - tileWidth() / 2
+            case XY.right:
+                return location.x + tileWidth() / 2
+            case XY.top:
+                return location.y - tileWidth() / 2
+            case XY.bottom:
+                return location.y + tileWidth() / 2
+        }
+        return undefined
+    }
+
+    /**
+     * Starting from a tile location, get the neighboring tile location in the given direction.
+     */
+    //% block="location $direction of $location"
+    //% direction.shadow=direction_editor
+    //% location.shadow=variables_get
+    //% location.defl=location
+    //% group="Location" weight=40
+    export function locationInDirection(location: tiles.Location, direction: number) {
+        return tiles.getTileLocation(
+            columnInDirection(locationColumn(location), direction),
+            rowInDirection(locationRow(location), direction)
+        );
+    }
+
+    //% blockId=direction_editor shim=TD_ID
+    //% block="$direction"
+    //% group="Location" weight=10
+    export function _directionEditor(direction: CollisionDirection): CollisionDirection {
+        return direction;
     }
 
     /**
@@ -309,28 +395,6 @@ namespace tilemap {
     }
 
     /**
-     * Gets the tilemap column of a tile location
-     */
-    //% block="$location column"
-    //% location.shadow=variables_get
-    //% location.defl=location
-    //% group="Location" weight=50 blockGap=8
-    export function locationColumn(location: tiles.Location): number {
-        return screenCoordinateToTile(location.x);
-    }
-
-    /**
-     * Gets the tilemap row of a tile location
-     */
-    //% block="$location row"
-    //% location.shadow=variables_get
-    //% location.defl=location
-    //% group="Location" weight=40 blockGap=8
-    export function locationRow(location: tiles.Location): number {
-        return screenCoordinateToTile(location.y);
-    }
-
-    /**
      * Converts a screen coordinate to a tilemap location.
      */
     export function screenCoordinateToTile(value: number) {
@@ -340,65 +404,6 @@ namespace tilemap {
         const tm = game.currentScene().tileMap;
         if (!tm) return value >> 4;
         return value >> tm.scale;
-    }
-
-    export enum RowCol {
-        row,
-        col
-    }
-
-    /**
-     * Gets a sprite's row or column.
-     */
-    //% block="$sprite $rowCol"
-    //% sprite.shadow=variables_get
-    //% sprite.defl=mySprite
-    //% group="Location" weight=30 blockGap=8
-    export function spriteRowCol(sprite: Sprite, rowCol: RowCol) {
-        return screenCoordinateToTile(rowCol === RowCol.row ? sprite.x : sprite.y)
-    }
-
-    export enum XY {
-        x,
-        y,
-        top,
-        left,
-        right,
-        bottom
-    }
-
-    /**
-     * Get's the world x or y position from a tile row column location.
-     */
-    //% block="tile $location $xy"
-    //% location.shadow=variables_get
-    //% location.defl=location
-    //% group="Location" weight=30 blockGap=8
-    export function locationXY(location: tiles.Location, xy: XY) {
-        let n: number;
-        switch (xy) {
-            case XY.x:
-                n = location.x + 0.5
-                break;
-            case XY.y:
-                n = location.y + 0.5
-                break;
-            case XY.left:
-                n = location.x
-                break;
-            case XY.right:
-                n = location.x + 1.0
-                break;
-            case XY.top:
-                n = location.y
-                break;
-            case XY.bottom:
-                n = location.y + 1.0
-                break;
-            default:
-                break;
-        }
-        return tileCoordinateToScreen(n)
     }
 
     /**
