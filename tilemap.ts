@@ -372,7 +372,7 @@ namespace tilemap {
     /**
      * Returns the number of columns in the currently loaded tilemap.
      */
-    //% block="tilemap columns"
+    //% block="total tilemap columns"
     //% group="Location" weight=16 blockGap=8
     export function tilemapColumns(): number {
         const tm = game.currentScene().tileMap;
@@ -385,7 +385,7 @@ namespace tilemap {
     /**
      * Returns the number of rows in the currently loaded tilemap.
      */
-    //% block="tilemap rows"
+    //% block="total tilemap rows"
     //% group="Location" weight=17 blockGap=8
     export function tilemapRows(): number {
         const tm = game.currentScene().tileMap;

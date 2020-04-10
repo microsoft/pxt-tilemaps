@@ -1,5 +1,36 @@
+namespace ConnectionKind {
+    /**
+     * Gets the "kind" of tilemap connection
+     */
+    //% shim=KIND_GET
+    //% blockId="connection_kind" block="$kind"
+    //% kindNamespace=ConnectionKind kindMemberName=kind kindPromptHint="e.g. Door1, Tunnel1, ..."
+    //% blockHidden=true
+    export function _connectionKind(kind: number): number {
+        return kind;
+    }
+
+    let nextKind: number
+    export function create() {
+        if (nextKind === undefined) nextKind = 1;
+        return nextKind++;
+    }
+
+    //% isKind
+    export const Door1 = create();
+
+    //% isKind
+    export const Door2 = create();
+
+    //% isKind
+    export const Ladder1 = create();
+
+    //% isKind
+    export const Pipe1 = create();
+}
+
 //% color=#b8849b icon="\uf0ac"
-//% groups='["Creation", "Connections", "Overworld Grid"]'
+//% groups='["Creation", "Connections"]'
 namespace overworld {
     export const OVERWORLD_MAP_ID = 7686;
     export const MAP_LOADED_EVENT = 7687;
@@ -76,11 +107,12 @@ namespace overworld {
      * Creates a tilemap that can be connected to other tilemaps through the overworld.
      */
     //% blockId=create_overworld_map
-    //% block="create tilemap $tilemap"
+    //% block="tilemap $tilemap"
     //% tilemap.fieldEditor="tilemap"
     //% tilemap.fieldOptions.decompileArgumentAsString="true"
     //% tilemap.fieldOptions.filter="tile"
-    //% group="Creation" weight=50 blockGap=8
+    //% group="Creation" weight=50 blockGap=8 
+    //% duplicateShadowOnDrag
     export function createMap(tilemap: tiles.TileMapData): WorldMap {
         return new WorldMap(tilemap);
     }
@@ -88,7 +120,7 @@ namespace overworld {
     /**
      * Sets the current overworld tilemap.
      */
-    //% block="load tilemap $map"
+    //% block="set current tilemap to $map"
     //% map.shadow=create_overworld_map
     //% group="Creation" weight=40 blockGap=8
     export function loadMap(map: WorldMap) {
@@ -114,7 +146,7 @@ namespace overworld {
     /**
      * Returns the loaded overworld tilemap.
      */
-    //% block="loaded tilemap"
+    //% block="current tilemap"
     //% group="Creation" weight=30
     export function getLoadedMap(): WorldMap {
         return OverWorldState.getInstance().loadedMap
@@ -159,43 +191,46 @@ namespace overworld {
     }
 
     /**
-     * Connects the source tilemap to a destination tilemap with a connection ID. 
-     * Connections are stored on the source tilemap and IDs can be reused between
-     * different source tilemaps.
+     * Connects two tilemaps with a connection name or number. 
+     * Connections work in both ways and are remembered by both tilemaps.
      */
-    //% block="connect $sourceTilemap to $destination with ID $connectionID"
-    //% sourceTilemap.shadow=variables_get
-    //% sourceTilemap.defl=sourceTilemap
-    //% destination.shadow=create_overworld_map
-    //% group="Connections" weight=20 blockGap=8
-    export function connectMapById(sourceTilemap: WorldMap, destination: WorldMap, connectionID: number) {
-        connectMapByIdCore(sourceTilemap, destination, connectionID);
-        connectMapByIdCore(destination, sourceTilemap, connectionID);
+    //% block="connect $tilemap1 and $tilemap2 by $connection"
+    //% tilemap1.shadow=variables_get
+    //% tilemap1.defl=tilemap1
+    //% tilemap2.shadow=variables_get
+    //% tilemap2.defl=tilemap2
+    //% connection.shadow=connection_kind
+    //% group="Connections" weight=40 blockGap=8
+    export function connectMapById(tilemap1: WorldMap, tilemap2: WorldMap, connection: number) {
+        connectMapByIdCore(tilemap1, tilemap2, connection);
+        connectMapByIdCore(tilemap2, tilemap1, connection);
     }
 
     /**
-     * Loads the overworld tilemap connected to the loaded source tilemap by the
-     * given connection ID.
+     * Loads the overworld tilemap connected to the current tilemap by the
+     * given connection name or number.
      */
-    //% block="load destination tilemap from connection ID $connectionID"
+    //% block="load tilemap connected by $connection"
+    //% connection.shadow=connection_kind
     //% group="Connections" weight=30 blockGap=8
-    export function loadConnectedMap(connectionID: number) {
-        loadMap(getConnectedMap(getLoadedMap(), connectionID));
+    export function loadConnectedMap(connection: number) {
+        loadMap(getConnectedMap(getLoadedMap(), connection));
     }
 
 
     /**
-     * Gets the destination tilemap connected to the source tilemap by the given connection ID.
+     * Gets the destination tilemap connected to the source tilemap by the given connection name or number.
      */
-    //% block="get tilemap connected to $sourceTilemap by ID $connectionID"
-    //% sourceTilemap.shadow=variables_get
-    //% sourceTilemap.defl=sourceTilemap
+    //% block="get tilemap connected to $tilemap by $connection"
+    //% tilemap.shadow=variables_get
+    //% tilemap.defl=tilemap
+    //% connection.shadow=connection_kind
     //% group="Connections" weight=10 blockGap=8
-    export function getConnectedMap(sourceTilemap: WorldMap, connectionID: number): WorldMap {
-        if (!sourceTilemap) return null;
+    export function getConnectedMap(tilemap: WorldMap, connection: number): WorldMap {
+        if (!tilemap) return null;
 
-        for (const connection of sourceTilemap.connections) {
-            if (connection.id === connectionID) return connection.map;
+        for (const other of tilemap.connections) {
+            if (other.id === connection) return other.map;
         }
 
         return null;
