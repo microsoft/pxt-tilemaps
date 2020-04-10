@@ -29,9 +29,9 @@ namespace ConnectionKind {
     export const Pipe1 = create();
 }
 
-//% color=#b8849b icon="\uf0ac"
-//% groups='["Creation", "Connections"]'
-namespace overworld {
+//% color=#84b89f icon="\uf279"
+//% groups='["Sprites", "Cover", "Tiles", "Creation", "Connections", "Location", "Camera"]'
+namespace tilemap {
     export const OVERWORLD_MAP_ID = 7686;
     export const MAP_LOADED_EVENT = 7687;
 
