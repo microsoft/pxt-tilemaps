@@ -123,7 +123,7 @@ namespace tilemap {
     //% block="copy $map"
     //% map.shadow=variables_get
     //% map.defl=tilemap
-    //% group="Creation" weight=50 blockGap=8
+    //% group="Creation" weight=25 blockGap=8
     export function copyMap(map: WorldMap): WorldMap {
         let newData = tiles.createTilemap(
             (map.tilemap as any).data,
