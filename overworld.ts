@@ -118,6 +118,22 @@ namespace tilemap {
     }
 
     /**
+     * Copy an existing tilemap but without the connections.
+     */
+    //% block="copy $map"
+    //% map.shadow=variables_get
+    //% map.defl=tilemap
+    //% group="Creation" weight=50 blockGap=8
+    export function copyMap(map: WorldMap): WorldMap {
+        let newData = tiles.createTilemap(
+            (map.tilemap as any).data,
+            (map.tilemap as any).layers,
+            (map.tilemap as any).tileset,
+            map.tilemap.scale);
+        return new WorldMap(newData);
+    }
+
+    /**
      * Sets the current overworld tilemap.
      */
     //% block="set current tilemap to $map"
