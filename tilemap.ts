@@ -99,7 +99,7 @@ namespace tiles {
     //% block="destroy all sprites of kind $spriteKind"
     //% spriteKind.shadow=spritekind
     //% group="Sprites" weight=9 blockGap=8
-    export function destorySpritesOfKind(spriteKind: number) {
+    export function destroySpritesOfKind(spriteKind: number) {
         sprites.allOfKind(spriteKind).forEach(s => s.destroy());
     }
 
