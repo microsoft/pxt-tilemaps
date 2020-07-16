@@ -31,7 +31,7 @@ namespace ConnectionKind {
 
 //% color=#84b89f icon="\uf279"
 //% groups='["Sprites", "Cover", "Tiles", "Creation", "Connections", "Location", "Camera"]'
-namespace tilemap {
+namespace tiles {
     export const OVERWORLD_MAP_ID = 7686;
     export const MAP_LOADED_EVENT = 7687;
 
@@ -142,7 +142,7 @@ namespace tilemap {
     export function loadMap(map: WorldMap) {
         const loaded = getLoadedMap();
 
-        tilemap.destorySpritesOfKind(SpriteKind._TileSprite)
+        tiles.destorySpritesOfKind(SpriteKind._TileSprite)
 
         if (loaded) {
             OverWorldState.callUnloadListeners();
@@ -297,8 +297,8 @@ namespace tilemap {
         //% direction.shadow=direction_editor
         //% group="Overworld Grid" weight=40
         loadMapAt(
-            tilemap.columnInDirection(loadedWorldColumn(), direction),
-            tilemap.rowInDirection(loadedWorldRow(), direction)
+            tiles.columnInDirection(loadedWorldColumn(), direction),
+            tiles.rowInDirection(loadedWorldRow(), direction)
         );
     }
 

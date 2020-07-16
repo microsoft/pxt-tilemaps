@@ -1,18 +1,21 @@
 {
     "name": "tilemaps",
+    "version": "1.7.1",
+    "description": "An extension for handling multiple tilemaps and extra tilemap blocks.",
     "dependencies": {
         "device": "*"
     },
-    "description": "An extension for handling multiple tilemaps and extra tilemap blocks.",
     "files": [
         "README.md",
         "tilemap.ts",
         "overworld.ts",
         "search.ts"
     ],
-    "preferredEditor": "tsprj",
     "testFiles": [
         "test.ts"
     ],
-    "version": "1.7.1"
+    "supportedTargets": [
+        "arcade"
+    ],
+    "preferredEditor": "tsprj"
 }

@@ -3,8 +3,9 @@ namespace SpriteKind {
 }
 
 //% color=#84b89f icon="\uf279"
+//% block="Tilemaps"
 //% groups='["Sprites", "Cover", "Tiles", "Location", "Camera"]'
-namespace tilemap {
+namespace tiles {
     //
     // Cover
     //
