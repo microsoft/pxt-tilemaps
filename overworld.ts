@@ -142,7 +142,7 @@ namespace tiles {
     export function loadMap(map: WorldMap) {
         const loaded = getLoadedMap();
 
-        tiles.destorySpritesOfKind(SpriteKind._TileSprite)
+        tiles.destroySpritesOfKind(SpriteKind._TileSprite)
 
         if (loaded) {
             OverWorldState.callUnloadListeners();
