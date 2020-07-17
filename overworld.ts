@@ -121,6 +121,7 @@ namespace tiles {
      * Copy an existing tilemap but without the connections.
      */
     //% block="copy $map"
+    //% blockId=tilemap_copyMap
     //% map.shadow=variables_get
     //% map.defl=tilemap
     //% group="Creation" weight=25 blockGap=8
@@ -137,6 +138,7 @@ namespace tiles {
      * Sets the current overworld tilemap.
      */
     //% block="set current tilemap to $map"
+    //% blockId=tilemap_loadMap
     //% map.shadow=create_overworld_map
     //% group="Creation" weight=40 blockGap=8
     export function loadMap(map: WorldMap) {
@@ -163,6 +165,7 @@ namespace tiles {
      * Returns the loaded overworld tilemap.
      */
     //% block="current tilemap"
+    //% blockId=tilemap_getLoadedMap
     //% group="Creation" weight=30
     export function getLoadedMap(): WorldMap {
         return OverWorldState.getInstance().loadedMap
@@ -172,6 +175,7 @@ namespace tiles {
      * Runs code when an overworld tilemap is loaded.
      */
     //% block="on tilemap loaded $tilemap"
+    //% blockId=tilemap_onMapLoaded
     //% draggableParameters="reporter"
     //% group="Creation" weight=20 blockGap=8
     export function onMapLoaded(cb: (tilemap: WorldMap) => void) {
@@ -184,6 +188,7 @@ namespace tiles {
      * Runs code when an overworld tilemap is unloaded.
      */
     //% block="on tilemap unloaded $tilemap"
+    //% blockId=tilemap_onMapUnloaded
     //% draggableParameters="reporter"
     //% group="Creation" weight=10 blockGap=8
     export function onMapUnloaded(cb: (tilemap: WorldMap) => void) {
@@ -211,6 +216,7 @@ namespace tiles {
      * Connections work in both ways and are remembered by both tilemaps.
      */
     //% block="connect $tilemap1 and $tilemap2 by $connection"
+    //% blockId=tilemap_connectMapById
     //% tilemap1.shadow=variables_get
     //% tilemap1.defl=tilemap1
     //% tilemap2.shadow=variables_get
@@ -227,6 +233,7 @@ namespace tiles {
      * given connection name or number.
      */
     //% block="load tilemap connected by $connection"
+    //% blockId=tilemap_loadConnectedMap
     //% connection.shadow=connection_kind
     //% group="Connections" weight=30 blockGap=8
     export function loadConnectedMap(connection: number) {
@@ -238,6 +245,7 @@ namespace tiles {
      * Gets the destination tilemap connected to the source tilemap by the given connection name or number.
      */
     //% block="get tilemap connected to $tilemap by $connection"
+    //% blockId=tilemap_getConnectedMap
     //% tilemap.shadow=variables_get
     //% tilemap.defl=tilemap
     //% connection.shadow=connection_kind

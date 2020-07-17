@@ -46,6 +46,7 @@ namespace tiles {
      * will not collide with other sprites.
      */
     //% block="cover all $tileKind tiles with $cover"
+    //% blockId=tilemap_coverAllTiles
     //% tileKind.shadow=tileset_tile_picker
     //% tileKind.decompileIndirectFixedInstances=true
     //% cover.shadow=tileset_tile_picker
@@ -64,6 +65,7 @@ namespace tiles {
      * Useful to use with the "on created [...]" sprite block.
      */
     //% block="on each $tileKind tile create sprite of kind $spriteKind"
+    //% blockId=tilemap_createSpritesOnTiles
     //% tileKind.shadow=tileset_tile_picker
     //% tileKind.decompileIndirectFixedInstances=true
     //% spriteKind.shadow=spritekind
@@ -97,6 +99,7 @@ namespace tiles {
      * between tilemaps.
      */
     //% block="destroy all sprites of kind $spriteKind"
+    //% blockId=tilemap_destorySpritesOfKind
     //% spriteKind.shadow=spritekind
     //% group="Sprites" weight=9 blockGap=8
     export function destroySpritesOfKind(spriteKind: number) {
@@ -112,6 +115,7 @@ namespace tiles {
      * is of a particular kind.
      */
     //% block="tile at $location is $tile"
+    //% blockId=tilemap_tileIs
     //% location.shadow=mapgettile
     //% tile.shadow=tileset_tile_picker
     //% tile.decompileIndirectFixedInstances=true
@@ -125,6 +129,7 @@ namespace tiles {
      * is a wall.
      */
     //% block="tile at $location is wall"
+    //% blockId=tilemap_tileIsWall
     //% location.shadow=mapgettile
     //% group="Tiles" weight=79
     export function tileIsWall(location: tiles.Location): boolean {
@@ -181,6 +186,7 @@ namespace tiles {
      * another tile.
      */
     //% block="replace all $from tiles with $to"
+    //% blockId=tilemap_replaceAllTiles
     //% from.shadow=tileset_tile_picker
     //% from.decompileIndirectFixedInstances=true
     //% to.shadow=tileset_tile_picker
@@ -233,6 +239,7 @@ namespace tiles {
      * Center the camera on a given tile location.
      */
     //% block="center camera on $location"
+    //% blockId=tilemap_createCameraOnTile
     //% group="Camera" weight=10 blockGap=8
     //% location.shadow=mapgettile
     export function centerCameraOnTile(location: tiles.Location) {
@@ -247,6 +254,7 @@ namespace tiles {
      * Gets the tile location of a sprite.
      */
     //% block="location of $s"
+    //% blockId=tilemap_locationOfSprite
     //% s.shadow=variables_get
     //% s.defl=mySprite
     //% group="Location" weight=90 blockGap=8
@@ -310,6 +318,7 @@ namespace tiles {
      * Get's the world x or y position from a tile row column location.
      */
     //% block="$location $xy"
+    //% blockId=tilemap_locationXY
     //% location.shadow=variables_get
     //% location.defl=location
     //% group="Location" weight=45 blockGap=8
@@ -340,6 +349,7 @@ namespace tiles {
      * Starting from a tile location, get the neighboring tile location in the given direction.
      */
     //% block="location $direction of $location"
+    //% blockId=tilemap_locationInDirection
     //% direction.shadow=direction_editor
     //% location.shadow=variables_get
     //% location.defl=location
@@ -362,6 +372,7 @@ namespace tiles {
      * Returns the width of tiles in the loaded tilemap.
      */
     //% block="tile width"
+    //% blockId=tilemap_tileWidth
     //% group="Location" weight=15
     export function tileWidth(): number {
         const tm = game.currentScene().tileMap;
@@ -374,6 +385,7 @@ namespace tiles {
      * Returns the number of columns in the currently loaded tilemap.
      */
     //% block="total tilemap columns"
+    //% blockId=tilemap_tilemapColumns
     //% group="Location" weight=16 blockGap=8
     export function tilemapColumns(): number {
         const tm = game.currentScene().tileMap;
@@ -387,6 +399,7 @@ namespace tiles {
      * Returns the number of rows in the currently loaded tilemap.
      */
     //% block="total tilemap rows"
+    //% blockId=tilemap_tilemapRows
     //% group="Location" weight=17 blockGap=8
     export function tilemapRows(): number {
         const tm = game.currentScene().tileMap;
