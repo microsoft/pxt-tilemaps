@@ -237,7 +237,10 @@ namespace tiles {
     //% connection.shadow=connection_kind
     //% group="Connections" weight=30 blockGap=8
     export function loadConnectedMap(connection: number) {
-        loadMap(getConnectedMap(getLoadedMap(), connection));
+        const nextMap = getConnectedMap(getLoadedMap(), connection)
+        if (nextMap) {
+            loadMap(nextMap);
+        }
     }
 
 
