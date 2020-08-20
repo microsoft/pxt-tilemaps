@@ -108,36 +108,6 @@ namespace tiles {
         state().storeSpritesForMap(tiles.getLoadedMap(), allStored);
     }
 
-
-    /**
-     * Stores all sprites in the current tilemap.
-     *
-     * Warning: this might not work with all games!
-     */
-    //% block="store all sprites for loaded map"
-    //% blockId=tilemap_storeAllSprites
-    //% group="Sprites" weight=6
-    export function storeAllSpritesForLoadedMap() {
-        // Using spritesbykind makes sure we only get sprites and
-        // not other drawables
-        const kindMap = game.currentScene().spritesByKind;
-        let allStored: SerializedSprite[] = [];
-
-        for (const kind of Object.keys(kindMap)) {
-            const allSprites = (kindMap as any)[kind] as sprites.SpriteSet;
-
-            for (const toStore of allSprites.sprites()) {
-                allStored.push(serializeSprite(toStore));
-                // change kind to prevent destroy event handlers from running
-                toStore.setKind(__internalKind);
-                toStore.destroy();
-            }
-        }
-
-        state().storeSpritesForMap(tiles.getLoadedMap(), allStored);
-    }
-
-
     /**
      * Restores all of the sprites stored for the current map. To store
      * sprites, use storeAllSpritesForLoadedMap or storeSpritesByKindForLoadedMap
