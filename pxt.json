@@ -10,6 +10,7 @@
         "tilemap.ts",
         "overworld.ts",
         "search.ts",
+        "store.ts",
         "tilemap.util.jres",
         "tilemap.util.ts"
     ],
