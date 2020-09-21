@@ -2,9 +2,39 @@
 
 This extension contains advanced APIs for working with tilemaps in blocks.
 
-<img width="492" alt="Screen Shot 2020-08-20 at 7 57 58 AM" src="https://user-images.githubusercontent.com/6453828/90788776-fd519c80-e2ba-11ea-8de2-7564e91e4faa.png">
-<img width="490" alt="Screen Shot 2020-08-20 at 7 58 10 AM" src="https://user-images.githubusercontent.com/6453828/90788773-fc206f80-e2ba-11ea-8777-942b17c2d7f2.png">
-<img width="488" alt="Screen Shot 2020-08-20 at 7 58 18 AM" src="https://user-images.githubusercontent.com/6453828/90788763-fa56ac00-e2ba-11ea-8343-5f510845b2de.png">
+## Usage
+
+## createSpritesOnTiles
+
+The ``||tiles.createSpritesOnTiles||`` block creates an empty sprite on top of each location with the specified tile. Combine this with ``||sprites.onCreated||`` to initialize the empty sprites with an image, position, etc.
+
+### Parameters
+
+* `tileKind` is the image of the tile where sprites will be created
+* `spriteKind` is the kind of sprite that will be created
+
+### Example 1
+
+Create a small green box on each empty tile.
+
+```blocks
+
+sprites.onCreated(SpriteKind.Enemy, function (sprite) {
+    sprite.setImage(img`
+        7 7 
+        7 7 
+        `)
+})
+tiles.setTilemap(tiles.createTilemap(hex`0400040000000000000000000000000000000000`, img`
+. . . . 
+. . . . 
+. . . . 
+. . . . 
+`, [myTiles.transparency16], TileScale.Sixteen))
+
+tiles.createSpritesOnTiles(myTiles.transparency16, SpriteKind.Enemy)
+
+```
 
 ## Create a project with this extension
 
