@@ -10,8 +10,8 @@
         "tilemap.ts",
         "overworld.ts",
         "search.ts",
-        "tilemap.util.jres",
-        "tilemap.util.ts"
+        "tiles.util.jres",
+        "tiles.util.ts"
     ],
     "testFiles": [
         "test.ts"

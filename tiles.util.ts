@@ -1,4 +1,4 @@
-namespace tilemap.util {
+namespace tiles.util {
     //% fixedInstance jres blockIdentity=images._tile
     //% tags="tile misc category-Placeholder"
     export const arrow0 = image.ofBuffer(hex``);

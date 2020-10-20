@@ -3,7 +3,7 @@
     "height": 16,
     "creator": "image.ofBuffer",
     "star": {
-        "namespace": "tilemap.util",
+        "namespace": "tiles.util",
         "mimeType": "image/x-mkcd-f4"
     },
     "tags": "tile misc category-Placeholder",
