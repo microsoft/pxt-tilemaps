@@ -111,7 +111,8 @@ namespace tiles {
     //% tilemap.fieldEditor="tilemap"
     //% tilemap.fieldOptions.decompileArgumentAsString="true"
     //% tilemap.fieldOptions.filter="tile"
-    //% group="Creation" weight=50 blockGap=8 
+    //% tilemap.fieldOptions.taggedTemplate="tilemap"
+    //% group="Creation" weight=50 blockGap=8
     //% duplicateShadowOnDrag
     export function createMap(tilemap: tiles.TileMapData): WorldMap {
         return new WorldMap(tilemap);
@@ -212,7 +213,7 @@ namespace tiles {
     }
 
     /**
-     * Connects two tilemaps with a connection name or number. 
+     * Connects two tilemaps with a connection name or number.
      * Connections work in both ways and are remembered by both tilemaps.
      */
     //% block="connect $tilemap1 and $tilemap2 by $connection"
@@ -330,4 +331,4 @@ namespace tiles {
         //% group="Overworld Grid" weight=10 blockGap=8
         return OverWorldState.getInstance().loadedRow;
     }
-} 
+}
