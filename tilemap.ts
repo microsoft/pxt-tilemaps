@@ -143,6 +143,17 @@ namespace tiles {
     }
 
     /**
+     * Gets the image of the current tile at a location.
+     */
+    //% block="tile at $location"
+    //% blockId=tilemap_tileAtLocation
+    //% location.shadow=mapgettile
+    //% group="Tiles" weight=80
+    export function getTileAtLocation(location: tiles.Location): Image {
+        return tiles.getTileAt(locationColumn(location), locationRow(location))
+    }
+
+    /**
      * Executes a piece of code for every tile of a given kind in the loaded
      * tilemap.
      */
