@@ -119,7 +119,7 @@ namespace tiles {
     }
 
     /**
-     * Creates a tilemap that can be connected to other tilemaps through the overworld.
+     * Creates a tilemap with 8x8 tiles that can be connected to other tilemaps through the overworld.
      */
     //% blockId=create_small_overworld_map
     //% block="8x8 tilemap $tilemap"
