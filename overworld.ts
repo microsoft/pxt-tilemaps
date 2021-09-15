@@ -119,6 +119,24 @@ namespace tiles {
     }
 
     /**
+     * Creates a tilemap with 8x8 tiles that can be connected to other tilemaps through the overworld.
+     */
+    //% blockId=create_small_overworld_map
+    //% block="8x8 tilemap $tilemap"
+    //% tilemap.fieldEditor="tilemap"
+    //% tilemap.fieldOptions.decompileArgumentAsString="true"
+    //% tilemap.fieldOptions.filter="tile"
+    //% tilemap.fieldOptions.taggedTemplate="tilemap"
+    //% tilemap.fieldOptions.tileWidth=8
+    //% tilemap.fieldOptions.initWidth=20
+    //% tilemap.fieldOptions.initHeight=15
+    //% group="Creation" weight=49 blockGap=8
+    //% duplicateShadowOnDrag
+    export function createSmallMap(tilemap: tiles.TileMapData): WorldMap {
+        return createMap(tilemap);
+    }
+
+    /**
      * Copy an existing tilemap but without the connections.
      */
     //% block="copy $map"
