@@ -1,6 +1,6 @@
 {
     "name": "tilemaps",
-    "version": "1.11.0",
+    "version": "1.12.0",
     "description": "An extension for handling multiple tilemaps and extra tilemap blocks.",
     "dependencies": {
         "device": "*"
